@@ -1,6 +1,9 @@
 package com.rushdevo.twittaddict;
 
-import com.rushdevo.twittaddict.data.TwittaddictData;
+import static com.rushdevo.twittaddict.constants.Twitter.CONSUMER;
+import static com.rushdevo.twittaddict.constants.Twitter.PROVIDER;
+
+import java.util.ArrayList;
 
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.OAuth;
@@ -13,8 +16,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import static com.rushdevo.twittaddict.constants.Twitter.CONSUMER;
-import static com.rushdevo.twittaddict.constants.Twitter.PROVIDER;
+
+import com.rushdevo.twittaddict.constants.Twitter;
+import com.rushdevo.twittaddict.data.TwittaddictData;
 
 public class Twittaddict extends Activity {
 	
@@ -26,7 +30,9 @@ public class Twittaddict extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         db = new TwittaddictData(this);
-        if (!authorized(CONSUMER)) {
+        if (authorized(CONSUMER)) {
+        	startGame();
+        } else {
         	// Get authorization
         	String authUrl;
 			try {
@@ -71,7 +77,13 @@ public class Twittaddict extends Activity {
 				e.printStackTrace();
 			}
 			saveTokenAndSecret(CONSUMER);
+			startGame();
     	}
+    }
+    
+    public void startGame() {
+    	ArrayList<Long> ids = Twitter.getFriendIds();
+    	return;
     }
     
     private boolean authorized(AbstractOAuthConsumer consumer) {

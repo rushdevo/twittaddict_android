@@ -51,6 +51,9 @@ public class TwittaddictData extends SQLiteOpenHelper {
 	
 	public boolean addUser(String login, String token, String tokenSecret) {
 		SQLiteDatabase db = getWritableDatabase();
+		// Get rid of any previously existing user records - there can only be one
+		truncateUsersTable(db);
+		// Then add the new one
 		ContentValues values = new ContentValues();
 		values.put(USERS_LOGIN, login);
 		values.put(USERS_TOKEN, token);
@@ -61,6 +64,10 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		} catch (SQLException e) {
 			return false;
 		}
+	}
+	
+	public void truncateUsersTable(SQLiteDatabase db) {
+		db.execSQL("DELETE FROM " + USERS_TABLE_NAME);
 	}
 
 }
