@@ -11,7 +11,6 @@ import static android.provider.BaseColumns._ID;
 
 import static com.rushdevo.twittaddict.data.UserColumns.USERS_TABLE_NAME;
 import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN;
-import static com.rushdevo.twittaddict.data.UserColumns.USERS_LOGIN;
 import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN_SECRET;
 
 
@@ -19,7 +18,7 @@ public class TwittaddictData extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "twittaddict.db";
 	private static final int DATABASE_VERSION = 1;
 	
-	private static final String[] USER_COLUMNS = { _ID, USERS_LOGIN, USERS_TOKEN, USERS_TOKEN_SECRET };
+	private static final String[] USER_COLUMNS = { _ID, USERS_TOKEN, USERS_TOKEN_SECRET };
 
 	public TwittaddictData(Context ctx) {
 		super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,8 +30,7 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		sql.append("CREATE TABLE " + USERS_TABLE_NAME + " (");
 		sql.append(_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, ");
 		sql.append(USERS_TOKEN_SECRET + " TEXT, ");
-		sql.append(USERS_TOKEN + " TEXT, ");
-		sql.append(USERS_LOGIN + " TEXT");
+		sql.append(USERS_TOKEN + " TEXT");
 		sql.append(");");
 		db.execSQL(sql.toString());
 	}
@@ -49,13 +47,12 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		return db.query(USERS_TABLE_NAME, USER_COLUMNS, null, null, null, null, null);
 	}
 	
-	public boolean addUser(String login, String token, String tokenSecret) {
+	public boolean addUser(String token, String tokenSecret) {
 		SQLiteDatabase db = getWritableDatabase();
 		// Get rid of any previously existing user records - there can only be one
 		truncateUsersTable(db);
 		// Then add the new one
 		ContentValues values = new ContentValues();
-		values.put(USERS_LOGIN, login);
 		values.put(USERS_TOKEN, token);
 		values.put(USERS_TOKEN_SECRET, tokenSecret);
 		try {

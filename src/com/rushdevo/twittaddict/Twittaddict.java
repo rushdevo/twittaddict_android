@@ -2,9 +2,6 @@ package com.rushdevo.twittaddict;
 
 import static com.rushdevo.twittaddict.constants.Twitter.CONSUMER;
 import static com.rushdevo.twittaddict.constants.Twitter.PROVIDER;
-
-import java.util.ArrayList;
-
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.OAuth;
 import oauth.signpost.exception.OAuthCommunicationException;
@@ -17,13 +14,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.rushdevo.twittaddict.constants.Twitter;
 import com.rushdevo.twittaddict.data.TwittaddictData;
 
 public class Twittaddict extends Activity {
 	
 	private static String CALLBACK_URL = "twittaddict://twitterauth";
 	private TwittaddictData db;
+	private Game game;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,8 +79,7 @@ public class Twittaddict extends Activity {
     }
     
     public void startGame() {
-    	ArrayList<Long> ids = Twitter.getFriendIds();
-    	return;
+    	game = new Game();
     }
     
     private boolean authorized(AbstractOAuthConsumer consumer) {
@@ -98,8 +94,8 @@ public class Twittaddict extends Activity {
     	Cursor cursor = db.getUsers();
     	if (cursor.moveToNext()) {
     		// We have the user saved
-    		String token = cursor.getString(2);
-    		String tokenSecret = cursor.getString(3);
+    		String token = cursor.getString(1);
+    		String tokenSecret = cursor.getString(2);
     		if (token == null || tokenSecret == null) {
     			// We have crappy data somehow
     			return false;
@@ -115,7 +111,6 @@ public class Twittaddict extends Activity {
     }
     
     private void saveTokenAndSecret(AbstractOAuthConsumer consumer) {
-    	// TODO: Get the user name here too
-    	db.addUser(null, consumer.getToken(), consumer.getTokenSecret());
+    	db.addUser(consumer.getToken(), consumer.getTokenSecret());
     }
 }
