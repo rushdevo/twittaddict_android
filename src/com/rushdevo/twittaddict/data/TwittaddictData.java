@@ -1,17 +1,15 @@
 package com.rushdevo.twittaddict.data;
 
+import static android.provider.BaseColumns._ID;
+import static com.rushdevo.twittaddict.data.UserColumns.USERS_TABLE_NAME;
+import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN;
+import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN_SECRET;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import static android.provider.BaseColumns._ID; 
-
-import static com.rushdevo.twittaddict.data.UserColumns.USERS_TABLE_NAME;
-import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN;
-import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN_SECRET;
 
 
 public class TwittaddictData extends SQLiteOpenHelper {

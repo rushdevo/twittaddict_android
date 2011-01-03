@@ -12,6 +12,7 @@ public class TwitterUser {
 	private String description;
 	private Integer friendsCount;
 	private Integer statusesCount;
+	private boolean valid;
 	
 	public TwitterUser(JSONObject userData) {
 		try {
@@ -23,9 +24,11 @@ public class TwitterUser {
 			this.description = userData.getString("description");
 			this.friendsCount = userData.getInt("friends_count");
 			this.statusesCount = userData.getInt("statuses_count");
+			this.valid = true;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			this.valid = false;
 		}
 	}
 
@@ -91,5 +94,9 @@ public class TwitterUser {
 
 	public Integer getStatusesCount() {
 		return statusesCount;
+	}
+	
+	public boolean isValid() {
+		return this.valid;
 	}
 }

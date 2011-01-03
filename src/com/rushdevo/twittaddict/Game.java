@@ -2,23 +2,26 @@ package com.rushdevo.twittaddict;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import com.rushdevo.twittaddict.constants.Twitter;
+import com.rushdevo.twittaddict.twitter.TwitterStatus;
 import com.rushdevo.twittaddict.twitter.TwitterUser;
 
 public class Game {
 	
 	private TwitterUser user;
 	private Boolean success;
-	private ArrayList<String> messages;
-	private ArrayList<TwitterUser> friends;
+	private List<String> messages;
+	private List<TwitterUser> friends;
+	private List<TwitterStatus> statuses;
 	
 	public Game() {
 		messages = new ArrayList<String>();
 		this.success = true;
 		initializeUser();
 		initializeFriends();
-		return;
+		initializeStatuses();
 	}
 
 	private void initializeUser() {
@@ -37,6 +40,18 @@ public class Game {
 		} else {
 			Collections.shuffle(ids);
 			this.friends = Twitter.getUsers(ids);
+			if (this.friends == null || this.friends.isEmpty()) {
+				this.success = false;
+				messages.add("Unable to retrieve friends for " + getScreenName() + ".");
+			}
+		}
+	}
+	
+	private void initializeStatuses() {
+		this.statuses = Twitter.getStatuses();
+		if (this.statuses == null || this.statuses.isEmpty()) {
+			this.success = false;
+			messages.add("Unable to retrieve statuses for " + getScreenName() + ".");
 		}
 	}
 	
@@ -56,7 +71,7 @@ public class Game {
 		return success;
 	}
 	
-	public ArrayList<TwitterUser> getFriends() {
+	public List<TwitterUser> getFriends() {
 		return this.friends;
 	}
 }

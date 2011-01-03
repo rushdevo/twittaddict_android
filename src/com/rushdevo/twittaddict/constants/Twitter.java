@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.rushdevo.twittaddict.exceptions.TwitterConnectionFailedException;
+import com.rushdevo.twittaddict.twitter.TwitterStatus;
 import com.rushdevo.twittaddict.twitter.TwitterUser;
 
 public class Twitter {
@@ -41,6 +42,7 @@ public class Twitter {
 	private static final String FRIEND_URL = BASE_URL + "friends/ids.json";
 	private static final String CREDENTIALS_URL = BASE_URL + "account/verify_credentials.json";
 	private static final String USER_LOOKUP_URL = BASE_URL + "users/lookup.json";
+	private static final String FRIENDS_TIMELINE_URL = BASE_URL + "statuses/friends_timeline.json?count=200";
 	
 	public static ArrayList<Long> getFriendIds() {
 		try {
@@ -91,6 +93,23 @@ public class Twitter {
 			}
 		}
 		return users;
+	}
+	
+	public static ArrayList<TwitterStatus> getStatuses() {
+		try {
+			JSONArray array = getJSONArray(FRIENDS_TIMELINE_URL, "home timeline");
+			if (array != null) {
+				ArrayList<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
+				for (int i=0; i<array.length(); i++) {
+					statuses.add(new TwitterStatus(array.getJSONObject(i)));
+				}
+				return statuses;
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private static JSONArray getJSONArray(String url, String resourceName) {
