@@ -9,7 +9,9 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -27,7 +29,7 @@ public class Twittaddict extends Activity implements Runnable {
 	private Game game;
 	private boolean initializing = false;
 	private ProgressDialog progressDialog;
-
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,17 +44,17 @@ public class Twittaddict extends Activity implements Runnable {
 				authUrl = PROVIDER.retrieveRequestToken(CONSUMER, CALLBACK_URL);
 				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
 			} catch (OAuthMessageSignerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
 			} catch (OAuthNotAuthorizedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
 			} catch (OAuthExpectationFailedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
 			} catch (OAuthCommunicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
 			}  
         }
     }
@@ -72,28 +74,28 @@ public class Twittaddict extends Activity implements Runnable {
     	    // this will populate token and token_secret in consumer
     	    try {
 				PROVIDER.retrieveAccessToken(CONSUMER, verifier);
+				saveTokenAndSecret(CONSUMER);
+				startGame();
 			} catch (OAuthMessageSignerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
 			} catch (OAuthNotAuthorizedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
 			} catch (OAuthExpectationFailedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
 			} catch (OAuthCommunicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
 			}
-			saveTokenAndSecret(CONSUMER);
-			startGame();
     	}
     }
     
     @Override
 	public void run() {
 		// Start the game
-    	game = new Game();
+    	game = new Game(this);
     	handler.sendEmptyMessage(0);
 	}
     
@@ -145,6 +147,28 @@ public class Twittaddict extends Activity implements Runnable {
     	public void handleMessage(Message message) {
     		progressDialog.dismiss();
     		initializing = false;
+    		if (!game.getSuccess()) {
+    			// Something went wrong during game initialization
+    			errorAlert(game.getFormattedMessage());
+    		}
     	}
     };
+    
+    private void errorAlert(String message) {
+    	AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    	alertDialog.setTitle(getString(R.string.error_alert_title));
+    	alertDialog.setMessage(message);
+    	alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+    	   public void onClick(DialogInterface dialog, int which) { }
+    	});
+    	alertDialog.show();
+    }
+    
+    private void debug(String message) {
+    	Log.d("Twittaddict", message);
+    }
+    
+    private void debug(Exception e) {
+    	debug(e.getClass().toString() + " error: " + e.getMessage());
+    }
 }

@@ -4,4 +4,16 @@
     <string name="app_name">twittaddict</string>
     <string name="loading_title">Loading...</string>
     <string name="loading_message">Think you know your Twitter friends?\n\nMatch the Tweets to the Tweeters to find out!</string>
+    
+    <string name="error_alert_title">Something Went Wrong...</string>
+    <string name="oauth_failure">Unable to get authorization from Twitter.</string>
+    <string name="communication_failure">Unable to connect with Twitter.</string>
+    <string name="bad_response_failure">Unable to read response from Twitter.</string>
+    <string name="bad_friend_response_failure">Unable to read response from Twitter while gathering friends list.</string>
+    <string name="bad_user_response_failure">Unable to read response from Twitter while gathering user information.</string>
+    <string name="bad_status_response_failure">Unable to read response from Twitter while gathering statuses.</string>
+    <string name="screen_name_failure">Unable to find screen name for logged in user.</string>
+    <string name="no_friends_failure">Unable to find friends for </string>
+    <string name="no_statuses_failure">Unable to retrieve statuses for </string>
+    <string name="unknown_user">unknown twitter user</string>
 </resources>
