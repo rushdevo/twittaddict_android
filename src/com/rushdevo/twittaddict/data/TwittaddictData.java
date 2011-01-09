@@ -4,6 +4,7 @@ import static android.provider.BaseColumns._ID;
 import static com.rushdevo.twittaddict.data.UserColumns.USERS_TABLE_NAME;
 import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN;
 import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN_SECRET;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,9 +18,12 @@ public class TwittaddictData extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 	
 	private static final String[] USER_COLUMNS = { _ID, USERS_TOKEN, USERS_TOKEN_SECRET };
+	
+	private Activity ctx;
 
 	public TwittaddictData(Context ctx) {
 		super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
+		this.ctx = (Activity)ctx;
 	}
 	
 	@Override
@@ -42,7 +46,9 @@ public class TwittaddictData extends SQLiteOpenHelper {
 	
 	public Cursor getUsers() {
 		SQLiteDatabase db = getReadableDatabase();
-		return db.query(USERS_TABLE_NAME, USER_COLUMNS, null, null, null, null, null);
+		Cursor cursor = db.query(USERS_TABLE_NAME, USER_COLUMNS, null, null, null, null, null);
+		ctx.startManagingCursor(cursor);
+		return cursor;
 	}
 	
 	public boolean addUser(String token, String tokenSecret) {

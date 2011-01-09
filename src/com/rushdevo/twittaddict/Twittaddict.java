@@ -9,18 +9,24 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 import com.rushdevo.twittaddict.data.TwittaddictData;
 
-public class Twittaddict extends Activity {
+public class Twittaddict extends Activity implements Runnable {
 	
 	private static String CALLBACK_URL = "twittaddict://twitterauth";
 	private TwittaddictData db;
 	private Game game;
+	private boolean initializing = false;
+	private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,12 @@ public class Twittaddict extends Activity {
     }
     
     @Override
+    public void onPause() {
+    	super.onPause();
+    	if (progressDialog != null) progressDialog.dismiss();
+    }
+    
+    @Override
     public void onResume() {
     	super.onResume();
     	Uri uri = this.getIntent().getData();  
@@ -78,8 +90,20 @@ public class Twittaddict extends Activity {
     	}
     }
     
-    public void startGame() {
+    @Override
+	public void run() {
+		// Start the game
     	game = new Game();
+    	handler.sendEmptyMessage(0);
+	}
+    
+    public void startGame() {
+    	if (!initializing) {
+	    	initializing = true;
+	    	progressDialog = ProgressDialog.show(this, "Loading Game...	", "Loading Game...", true);
+	    	Thread thread = new Thread(this);
+	    	thread.start();
+    	}
     }
     
     private boolean authorized(AbstractOAuthConsumer consumer) {
@@ -113,4 +137,12 @@ public class Twittaddict extends Activity {
     private void saveTokenAndSecret(AbstractOAuthConsumer consumer) {
     	db.addUser(consumer.getToken(), consumer.getTokenSecret());
     }
+    
+    private Handler handler = new Handler() {
+    	@Override
+    	public void handleMessage(Message message) {
+    		progressDialog.dismiss();
+    		initializing = false;
+    	}
+    };
 }
