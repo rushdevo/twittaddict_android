@@ -100,7 +100,9 @@ public class Twittaddict extends Activity implements Runnable {
     public void startGame() {
     	if (!initializing) {
 	    	initializing = true;
-	    	progressDialog = ProgressDialog.show(this, "Loading Game...	", "Loading Game...", true);
+	    	String title = getResources().getString(R.string.loading_title);
+	    	String message = getResources().getString(R.string.loading_message);
+	    	progressDialog = ProgressDialog.show(this, title, message, true);
 	    	Thread thread = new Thread(this);
 	    	thread.start();
     	}
