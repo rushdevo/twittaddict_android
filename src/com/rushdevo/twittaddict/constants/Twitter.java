@@ -26,7 +26,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.rushdevo.twittaddict.R;
+import com.rushdevo.twittaddict.exceptions.TwitterCommunicationException;
 import com.rushdevo.twittaddict.exceptions.TwitterException;
+import com.rushdevo.twittaddict.exceptions.TwitterOAuthException;
 import com.rushdevo.twittaddict.twitter.TwitterStatus;
 import com.rushdevo.twittaddict.twitter.TwitterUser;
 
@@ -49,7 +51,7 @@ public class Twitter {
 	private static final String USER_LOOKUP_URL = BASE_URL + "users/lookup.json";
 	private static final String FRIENDS_TIMELINE_URL = BASE_URL + "statuses/friends_timeline.json?count=200";
 	
-	public static ArrayList<Long> getFriendIds(Context ctx) throws TwitterException {
+	public static ArrayList<Long> getFriendIds(Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		try {
 			JSONArray array = getJSONArray(FRIEND_URL, "friend list", ctx);
 			ArrayList<Long> friendIds = new ArrayList<Long>();
@@ -66,7 +68,7 @@ public class Twitter {
 		}
 	}
 	
-	public static TwitterUser getUser(Context ctx) throws TwitterException {
+	public static TwitterUser getUser(Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		JSONObject hash;
 		try {
 			hash = getJSONObject(CREDENTIALS_URL, "credentials", ctx);
@@ -77,7 +79,7 @@ public class Twitter {
 		}
 	}
 	
-	public static ArrayList<TwitterUser> getUsers(ArrayList<Long> ids, Context ctx) throws TwitterException {
+	public static ArrayList<TwitterUser> getUsers(ArrayList<Long> ids, Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		if (ids.isEmpty()) return new ArrayList<TwitterUser>();
 		Iterator<Long> iter = ids.iterator();
 		StringBuffer idStr = new StringBuffer();
@@ -106,7 +108,7 @@ public class Twitter {
 		}
 	}
 	
-	public static ArrayList<TwitterStatus> getStatuses(Context ctx) throws TwitterException {
+	public static ArrayList<TwitterStatus> getStatuses(Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		try {
 			JSONArray array = getJSONArray(FRIENDS_TIMELINE_URL, "home timeline", ctx);
 			ArrayList<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
@@ -123,7 +125,7 @@ public class Twitter {
 		}
 	}
 	
-	private static JSONArray getJSONArray(String url, String resourceName, Context ctx) throws TwitterException {
+	private static JSONArray getJSONArray(String url, String resourceName, Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		try {
 			String json = getJSONString(url, resourceName, ctx);
 			return new JSONArray(json);
@@ -136,7 +138,7 @@ public class Twitter {
 		}
 	}
 	
-	private static JSONObject getJSONObject(String url, String resourceName, Context ctx) throws TwitterException {
+	private static JSONObject getJSONObject(String url, String resourceName, Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		try {
 			String json = getJSONString(url, resourceName, ctx);
 			return new JSONObject(json);
@@ -149,7 +151,7 @@ public class Twitter {
 		}
 	}
 	
-	private static String getJSONString(String url, String resourceName, Context ctx) throws TwitterException {
+	private static String getJSONString(String url, String resourceName, Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		try {
 			HttpGet get = new HttpGet(url);
 			CONSUMER.sign(get);
@@ -157,7 +159,7 @@ public class Twitter {
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != 200) {
 				debug("Got status " + statusCode + " back from url '" + url + "' for resource '" + resourceName + "'.");
-				throw new TwitterException("Failed to get " + resourceName + " from Twitter: " + statusCode);
+				throw new TwitterCommunicationException("Failed to get " + resourceName + " from Twitter: " + statusCode);
 			}
 			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			StringBuffer buffer = new StringBuffer();
@@ -169,19 +171,19 @@ public class Twitter {
 			return buffer.toString();
 		} catch (OAuthMessageSignerException e) {
 			debug(e);
-			throw new TwitterException(ctx.getString(R.string.oauth_failure));
+			throw new TwitterOAuthException(ctx.getString(R.string.oauth_failure));
 		} catch (OAuthExpectationFailedException e) {
 			debug(e);
-			throw new TwitterException(ctx.getString(R.string.oauth_failure));
+			throw new TwitterOAuthException(ctx.getString(R.string.oauth_failure));
 		} catch (OAuthCommunicationException e) {
 			debug(e);
-			throw new TwitterException(ctx.getString(R.string.oauth_failure));
+			throw new TwitterOAuthException(ctx.getString(R.string.oauth_failure));
 		} catch (ClientProtocolException e) {
 			debug(e);
-			throw new TwitterException(ctx.getString(R.string.communication_failure));
+			throw new TwitterCommunicationException(ctx.getString(R.string.communication_failure));
 		} catch (IOException e) {
 			debug(e);
-			throw new TwitterException(ctx.getString(R.string.communication_failure));
+			throw new TwitterCommunicationException(ctx.getString(R.string.communication_failure));
 		}
 	}
 	

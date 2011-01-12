@@ -35,28 +35,6 @@ public class Twittaddict extends Activity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         db = new TwittaddictData(this);
-        if (authorized(CONSUMER)) {
-        	startGame();
-        } else {
-        	// Get authorization
-        	String authUrl;
-			try {
-				authUrl = PROVIDER.retrieveRequestToken(CONSUMER, CALLBACK_URL);
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
-			} catch (OAuthMessageSignerException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthNotAuthorizedException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthExpectationFailedException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthCommunicationException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			}  
-        }
     }
     
     @Override
@@ -89,6 +67,8 @@ public class Twittaddict extends Activity implements Runnable {
 				errorAlert(getString(R.string.oauth_failure));
 				debug(e);
 			}
+    	} else {
+    		authorizeOrStartGame();
     	}
     }
     
@@ -108,6 +88,31 @@ public class Twittaddict extends Activity implements Runnable {
 	    	Thread thread = new Thread(this);
 	    	thread.start();
     	}
+    }
+    
+    private void authorizeOrStartGame() {
+    	if (authorized(CONSUMER)) {
+        	if (game == null || !game.getSuccess()) startGame();
+        } else {
+        	// Get authorization
+        	String authUrl;
+			try {
+				authUrl = PROVIDER.retrieveRequestToken(CONSUMER, CALLBACK_URL);
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+			} catch (OAuthMessageSignerException e) {
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
+			} catch (OAuthNotAuthorizedException e) {
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
+			} catch (OAuthExpectationFailedException e) {
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
+			} catch (OAuthCommunicationException e) {
+				errorAlert(getString(R.string.oauth_failure));
+				debug(e);
+			}  
+        }
     }
     
     private boolean authorized(AbstractOAuthConsumer consumer) {

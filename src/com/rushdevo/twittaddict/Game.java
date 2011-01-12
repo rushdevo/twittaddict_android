@@ -2,14 +2,18 @@ package com.rushdevo.twittaddict;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.rushdevo.twittaddict.constants.Twitter;
+import com.rushdevo.twittaddict.exceptions.TwitterCommunicationException;
 import com.rushdevo.twittaddict.exceptions.TwitterException;
+import com.rushdevo.twittaddict.exceptions.TwitterOAuthException;
 import com.rushdevo.twittaddict.twitter.TwitterStatus;
 import com.rushdevo.twittaddict.twitter.TwitterUser;
 
@@ -17,12 +21,12 @@ public class Game {
 	
 	private TwitterUser user;
 	private Boolean success;
-	private List<String> messages;
+	private Set<String> messages;
 	private List<TwitterUser> friends;
 	private List<TwitterStatus> statuses;
 	
 	public Game(Context ctx) {
-		messages = new ArrayList<String>();
+		messages = new HashSet<String>();
 		this.success = true;
 		initializeUser(ctx);
 		initializeFriends(ctx);
@@ -36,6 +40,14 @@ public class Game {
 			debug(e);
 			success = false;
 			messages.add(ctx.getString(R.string.screen_name_failure));
+		} catch (TwitterOAuthException e) {
+			debug(e);
+			success = false;
+			messages.add(e.getMessage());
+		} catch (TwitterCommunicationException e) {
+			debug(e);
+			success = false;
+			messages.add(e.getMessage());
 		}
 	}
 	
@@ -53,6 +65,14 @@ public class Game {
 			debug(e);
 			this.success = false;
 			messages.add(ctx.getString(R.string.no_friends_failure) + " " + getScreenName(ctx) + ".");
+		} catch (TwitterOAuthException e) {
+			debug(e);
+			success = false;
+			messages.add(e.getMessage());
+		} catch (TwitterCommunicationException e) {
+			debug(e);
+			success = false;
+			messages.add(e.getMessage());
 		}
 	}
 	
@@ -68,6 +88,14 @@ public class Game {
 			debug(e);
 			this.success = false;
 			messages.add(ctx.getString(R.string.no_statuses_failure) + " " + getScreenName(ctx) + ".");
+		} catch (TwitterOAuthException e) {
+			debug(e);
+			success = false;
+			messages.add(e.getMessage());
+		} catch (TwitterCommunicationException e) {
+			debug(e);
+			success = false;
+			messages.add(e.getMessage());
 		}
 	}
 	
@@ -87,7 +115,7 @@ public class Game {
 		return success;
 	}
 	
-	public List<String> getMessages() {
+	public Set<String> getMessages() {
 		return this.messages;
 	}
 	
