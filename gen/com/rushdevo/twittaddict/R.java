@@ -13,26 +13,30 @@ public final class R {
     public static final class drawable {
         public static final int bg=0x7f020000;
         public static final int bg_repeat=0x7f020001;
-        public static final int icon=0x7f020002;
+        public static final int hourglass=0x7f020002;
+        public static final int icon=0x7f020003;
+    }
+    public static final class id {
+        public static final int timer=0x7f050000;
     }
     public static final class layout {
         public static final int main=0x7f030000;
     }
     public static final class string {
-        public static final int app_name=0x7f040001;
-        public static final int bad_friend_response_failure=0x7f040008;
-        public static final int bad_response_failure=0x7f040007;
-        public static final int bad_status_response_failure=0x7f04000a;
-        public static final int bad_user_response_failure=0x7f040009;
-        public static final int communication_failure=0x7f040006;
-        public static final int error_alert_title=0x7f040004;
-        public static final int hello=0x7f040000;
-        public static final int loading_message=0x7f040003;
-        public static final int loading_title=0x7f040002;
-        public static final int no_friends_failure=0x7f04000c;
-        public static final int no_statuses_failure=0x7f04000d;
-        public static final int oauth_failure=0x7f040005;
-        public static final int screen_name_failure=0x7f04000b;
-        public static final int unknown_user=0x7f04000e;
+        public static final int app_name=0x7f040000;
+        public static final int bad_friend_response_failure=0x7f040007;
+        public static final int bad_response_failure=0x7f040006;
+        public static final int bad_status_response_failure=0x7f040009;
+        public static final int bad_user_response_failure=0x7f040008;
+        public static final int communication_failure=0x7f040005;
+        public static final int error_alert_title=0x7f040003;
+        public static final int loading_message=0x7f040002;
+        public static final int loading_title=0x7f040001;
+        public static final int no_friends_failure=0x7f04000b;
+        public static final int no_statuses_failure=0x7f04000c;
+        public static final int oauth_failure=0x7f040004;
+        public static final int screen_name_failure=0x7f04000a;
+        public static final int start_time=0x7f04000e;
+        public static final int unknown_user=0x7f04000d;
     }
 }

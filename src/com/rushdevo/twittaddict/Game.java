@@ -24,6 +24,10 @@ public class Game {
 	private Set<String> messages;
 	private List<TwitterUser> friends;
 	private List<TwitterStatus> statuses;
+	public static final int PENDING = 0;
+	public static final int IN_PLAY = 1;
+	public static final int COMPLETE = 2;
+	private int state;
 	
 	public Game(Context ctx) {
 		messages = new HashSet<String>();
@@ -31,8 +35,9 @@ public class Game {
 		initializeUser(ctx);
 		initializeFriends(ctx);
 		initializeStatuses(ctx);
+		this.state = PENDING;
 	}
-
+	
 	private void initializeUser(Context ctx) {
 		try {
 			this.user = Twitter.getUser(ctx);
@@ -97,6 +102,18 @@ public class Game {
 			success = false;
 			messages.add(e.getMessage());
 		}
+	}
+	
+	public void start() {
+		this.state = IN_PLAY;
+	}
+	
+	public void finish() {
+		this.state = COMPLETE;
+	}
+	
+	public int getState() {
+		return this.state;
 	}
 	
 	public TwitterUser getUser() {

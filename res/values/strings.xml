@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World!</string>
     <string name="app_name">twittaddict</string>
     <string name="loading_title">Loading...</string>
     <string name="loading_message">Think you know your Twitter friends?\n\nMatch the Tweets to the Tweeters to find out!</string>
@@ -16,4 +15,5 @@
     <string name="no_friends_failure">Unable to find friends for </string>
     <string name="no_statuses_failure">Unable to retrieve statuses for </string>
     <string name="unknown_user">unknown twitter user</string>
+    <string name="start_time">60</string>
 </resources>

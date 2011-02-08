@@ -19,12 +19,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.rushdevo.twittaddict.data.TwittaddictData;
 
 public class Twittaddict extends Activity implements Runnable {
 	
 	private static String CALLBACK_URL = "twittaddict://twitterauth";
+	private static final int INIT_MESSAGE = 0;
+	private static final int TIMER_MESSAGE = 1;
+	private static final int GAME_LENGTH = 60;
 	private TwittaddictData db;
 	private Game game;
 	private boolean initializing = false;
@@ -76,7 +80,23 @@ public class Twittaddict extends Activity implements Runnable {
 	public void run() {
 		// Start the game
     	game = new Game(this);
-    	handler.sendEmptyMessage(0);
+    	game.start();
+    	handler.sendEmptyMessage(INIT_MESSAGE);
+		// Deal with the timer
+		long timeStamp = System.currentTimeMillis() / 1000;
+		int seconds = GAME_LENGTH;
+		while (seconds > 0) {
+			int diff = GAME_LENGTH - (int)((System.currentTimeMillis() / 1000) - timeStamp);
+			if (diff < 0) diff = 0;
+			if (diff != seconds) {
+				seconds = diff;
+				Message msg = new Message();
+        		msg.what = TIMER_MESSAGE;
+        		msg.arg1 = seconds;
+        		handler.sendMessage(msg);
+			}
+		}
+		game.finish();
 	}
     
     public void startGame() {
@@ -150,11 +170,19 @@ public class Twittaddict extends Activity implements Runnable {
     private Handler handler = new Handler() {
     	@Override
     	public void handleMessage(Message message) {
-    		progressDialog.dismiss();
-    		initializing = false;
-    		if (!game.getSuccess()) {
-    			// Something went wrong during game initialization
-    			errorAlert(game.getFormattedMessage());
+    		switch(message.what) {
+    		case INIT_MESSAGE:
+    			progressDialog.dismiss();
+        		initializing = false;
+        		if (!game.getSuccess()) {
+        			// Something went wrong during game initialization
+        			errorAlert(game.getFormattedMessage());
+        		}
+        		break;
+    		case TIMER_MESSAGE:
+    			TextView timerLabel = (TextView)findViewById(R.id.timer);
+    			timerLabel.setText(Integer.toString(message.arg1));
+    			break;
     		}
     	}
     };
