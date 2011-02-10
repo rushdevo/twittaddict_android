@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import android.content.Context;
@@ -24,6 +25,7 @@ public class Game {
 	private Set<String> messages;
 	private List<TwitterUser> friends;
 	private List<TwitterStatus> statuses;
+	private List<TwitterStatus> backupStatuses;
 	public static final int PENDING = 0;
 	public static final int IN_PLAY = 1;
 	public static final int COMPLETE = 2;
@@ -36,6 +38,64 @@ public class Game {
 		initializeFriends(ctx);
 		initializeStatuses(ctx);
 		this.state = PENDING;
+	}
+	
+	public void start() {
+		this.state = IN_PLAY;
+	}
+	
+	public void finish() {
+		this.state = COMPLETE;
+	}
+	
+	public int getState() {
+		return this.state;
+	}
+	
+	public Question getNextQuestion() {
+		Question question;
+		// Generate question of random type (tweet or user)
+		if (new Random().nextBoolean()) {
+			question = generateTweetQuestion();
+		} else {
+			question = generateUserQuestion();
+		}
+		return question;
+	}
+	
+	public TwitterUser getUser() {
+		return this.user;
+	}
+	
+	public String getScreenName(Context ctx) {
+		if (this.user == null || this.user.getScreenName() == null) {
+			return ctx.getString(R.string.unknown_user);
+		} else {
+			return this.user.getScreenName();
+		}
+	}
+
+	public Boolean getSuccess() {
+		return success;
+	}
+	
+	public Set<String> getMessages() {
+		return this.messages;
+	}
+	
+	public String getFormattedMessage() {
+		if (this.messages.isEmpty()) return null;
+		String message = "";
+		Iterator<String> iter = this.messages.iterator();
+		while (iter.hasNext()) {
+			message += iter.next();
+			if (iter.hasNext()) message += "\n\n";
+		}
+		return message;
+	}
+	
+	public List<TwitterUser> getFriends() {
+		return this.friends;
 	}
 	
 	private void initializeUser(Context ctx) {
@@ -84,6 +144,9 @@ public class Game {
 	private void initializeStatuses(Context ctx) {
 		try {
 			this.statuses = Twitter.getStatuses(ctx);
+			// Make a backup list because we change statuses as we go
+			this.backupStatuses = new ArrayList<TwitterStatus>();
+			this.backupStatuses.addAll(this.statuses);
 			if (this.statuses.isEmpty()) {
 				debug("No status for " + getScreenName(ctx));
 				this.success = false;
@@ -104,51 +167,62 @@ public class Game {
 		}
 	}
 	
-	public void start() {
-		this.state = IN_PLAY;
+	/**
+	 * Generate a TweetQuestion - a question where you are given a tweet
+	 * and you pick which user tweeted it (from three possible users)
+	 * @return TweetQuestion
+	 */
+	private TweetQuestion generateTweetQuestion() {
+		TwitterStatus status = getRandomStatus();
+		List<TwitterUser> users = getThreeRandomUsers();
+		return new TweetQuestion(status, users);
 	}
-	
-	public void finish() {
-		this.state = COMPLETE;
+	/**
+	 * Generate a UserQuestion - a question where you are given a user
+	 * and you pick which tweet belongs to them (from three tweets)
+	 * @return UserQuestion
+	 */
+	private UserQuestion generateUserQuestion() {
+		TwitterUser user = getRandomUser();
+		List<TwitterStatus> statuses = getThreeRandomStatuses();
+		return new UserQuestion(user, statuses);
 	}
-	
-	public int getState() {
-		return this.state;
+	private TwitterStatus getRandomStatus() {
+		// If we've run through all the statuses, reload them from backup and start over
+		if (this.statuses.isEmpty()) this.statuses.addAll(this.backupStatuses);
+		// Return a random status from the list
+		int index = new Random().nextInt() % this.statuses.size();
+		return this.statuses.remove(index);
 	}
-	
-	public TwitterUser getUser() {
-		return this.user;
+	private TwitterUser getRandomUser() {
+		int index = new Random().nextInt() % this.friends.size();
+		return this.friends.get(index);
 	}
-	
-	public String getScreenName(Context ctx) {
-		if (this.user == null || this.user.getScreenName() == null) {
-			return ctx.getString(R.string.unknown_user);
+	private List<TwitterStatus> getThreeRandomStatuses() {
+		List<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
+		statuses.add(getRandomStatus());
+		statuses.add(getRandomStatus());
+		statuses.add(getRandomStatus());
+		return statuses;
+	}
+	private List<TwitterUser> getThreeRandomUsers() {
+		List<TwitterUser> users = new ArrayList<TwitterUser>();
+		int size = this.friends.size();
+		if (size <= 3) {
+			// Just shuffle and return the whole thing
+			users.addAll(this.friends);
+			Collections.shuffle(users);
 		} else {
-			return this.user.getScreenName();
+			// Find three random users
+			TwitterUser user;
+			while (users.size() < 3) {
+				user = getRandomUser();
+				if (!users.contains(user)) {
+					users.add(user);
+				}
+			}
 		}
-	}
-
-	public Boolean getSuccess() {
-		return success;
-	}
-	
-	public Set<String> getMessages() {
-		return this.messages;
-	}
-	
-	public String getFormattedMessage() {
-		if (this.messages.isEmpty()) return null;
-		String message = "";
-		Iterator<String> iter = this.messages.iterator();
-		while (iter.hasNext()) {
-			message += iter.next();
-			if (iter.hasNext()) message += "\n\n";
-		}
-		return message;
-	}
-	
-	public List<TwitterUser> getFriends() {
-		return this.friends;
+		return users;
 	}
 	
 	private void debug(String message) {
