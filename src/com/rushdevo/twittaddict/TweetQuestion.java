@@ -10,6 +10,7 @@ public class TweetQuestion implements Question {
 	private TwitterUser user1;
 	private TwitterUser user2;
 	private TwitterUser user3;
+	private TwitterUser choice;
 	
 	public TweetQuestion(TwitterStatus status, List<TwitterUser> users) {
 		this.status = status;
@@ -33,5 +34,25 @@ public class TweetQuestion implements Question {
 	
 	public String getContainerId() {
 		return "tweet_question_container";
+	}
+	
+	public void setChoice(int index) {
+		switch (index) {
+		case 1:
+			this.choice = this.user1;
+			break;
+		case 2:
+			this.choice = this.user2;
+			break;
+		case 3:
+			this.choice = this.user3;
+			break;
+		default:
+			this.choice = null;
+		}
+	}
+	
+	public boolean isCorrect() {
+		return this.choice != null && this.choice == this.status.getUser();
 	}
 }

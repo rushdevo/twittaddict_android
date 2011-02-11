@@ -30,6 +30,7 @@ public class Game {
 	public static final int IN_PLAY = 1;
 	public static final int COMPLETE = 2;
 	private int state;
+	private Integer uniqueUserStatusCount;
 	
 	public Game(Context ctx) {
 		messages = new HashSet<String>();
@@ -167,6 +168,17 @@ public class Game {
 		}
 	}
 	
+	private Integer getUniqueUserStatusCount() {
+		if (uniqueUserStatusCount == null) {
+			Set<TwitterUser> uniqueUsers = new HashSet<TwitterUser>();
+			for (TwitterStatus status : this.statuses) {
+				uniqueUsers.add(status.getUser());
+			}
+			uniqueUserStatusCount = uniqueUsers.size();
+		}
+		return uniqueUserStatusCount;
+	}
+	
 	/**
 	 * Generate a TweetQuestion - a question where you are given a tweet
 	 * and you pick which user tweeted it (from three possible users)
@@ -174,7 +186,7 @@ public class Game {
 	 */
 	private TweetQuestion generateTweetQuestion() {
 		TwitterStatus status = getRandomStatus();
-		List<TwitterUser> users = getThreeRandomUsers();
+		List<TwitterUser> users = getThreeRandomUsers(status.getUser());
 		return new TweetQuestion(status, users);
 	}
 	/**
@@ -183,8 +195,9 @@ public class Game {
 	 * @return UserQuestion
 	 */
 	private UserQuestion generateUserQuestion() {
-		TwitterUser user = getRandomUser();
-		List<TwitterStatus> statuses = getThreeRandomStatuses();
+		TwitterStatus answer = getRandomStatus();
+		TwitterUser user = answer.getUser();
+		List<TwitterStatus> statuses = getThreeRandomStatuses(answer);
 		return new UserQuestion(user, statuses);
 	}
 	private TwitterStatus getRandomStatus() {
@@ -198,30 +211,41 @@ public class Game {
 		int index = new Random().nextInt() % this.friends.size();
 		return this.friends.get(index);
 	}
-	private List<TwitterStatus> getThreeRandomStatuses() {
+	private List<TwitterStatus> getThreeRandomStatuses(TwitterStatus status) {
+		TwitterUser user = status.getUser();
 		List<TwitterStatus> statuses = new ArrayList<TwitterStatus>();
-		statuses.add(getRandomStatus());
-		statuses.add(getRandomStatus());
-		statuses.add(getRandomStatus());
-		return statuses;
-	}
-	private List<TwitterUser> getThreeRandomUsers() {
-		List<TwitterUser> users = new ArrayList<TwitterUser>();
-		int size = this.friends.size();
-		if (size <= 3) {
-			// Just shuffle and return the whole thing
-			users.addAll(this.friends);
-			Collections.shuffle(users);
-		} else {
-			// Find three random users
-			TwitterUser user;
-			while (users.size() < 3) {
-				user = getRandomUser();
-				if (!users.contains(user)) {
-					users.add(user);
-				}
+		statuses.add(status);
+		int size = getUniqueUserStatusCount();
+		if (size > 3) size = 3;
+		TwitterStatus nextStatus;
+		while (statuses.size() < size) {
+			nextStatus = getRandomStatus();
+			if (nextStatus != status && nextStatus.getUser() != user) {
+				statuses.add(nextStatus);
 			}
 		}
+		Collections.shuffle(statuses);
+		return statuses;
+	}
+	/**
+	 * 
+	 * @param user
+	 * @return List of up to three unique users including the passed in user
+	 */
+	private List<TwitterUser> getThreeRandomUsers(TwitterUser user) {
+		List<TwitterUser> users = new ArrayList<TwitterUser>();
+		users.add(user);
+		int size = this.friends.size();
+		if (size > 3) size = 3;
+		// Find three random users
+		TwitterUser nextUser;
+		while (users.size() < 3) {
+			nextUser = getRandomUser();
+			if (!users.contains(nextUser)) {
+				users.add(nextUser);
+			}
+		}
+		Collections.shuffle(users);
 		return users;
 	}
 	
