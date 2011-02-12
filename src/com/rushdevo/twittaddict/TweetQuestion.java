@@ -31,11 +31,7 @@ public class TweetQuestion implements Question {
 	public TwitterUser getUser3() {
 		return this.user3;
 	}
-	
-	public String getContainerId() {
-		return "tweet_question_container";
-	}
-	
+
 	public void setChoice(int index) {
 		switch (index) {
 		case 1:

@@ -16,7 +16,42 @@
 		    android:layout_height="40px"
 		    android:textSize="22px"
 		    android:gravity="center"
+		    android:textColor="@color/grey"
 		    android:text="@string/start_time"
+		    />
+	</LinearLayout>
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:visibility="invisible"
+		android:id="@+id/tweet_question_container">
+		<TextView
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:minHeight="100dip"
+		    android:layout_margin="10dip"
+		    android:padding="10dip"
+		    android:gravity="center"
+		    android:background="@color/white"
+		    android:textColor="@color/grey"
+		    android:text="Testing! I'm the Tweet Question Container!!!"
+		    />
+	</LinearLayout>
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent"
+		android:visibility="invisible"
+		android:id="@+id/user_question_container">
+		<TextView
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:layout_margin="10dip"
+		    android:padding="10dip"
+		    android:gravity="center_horizontal"
+		    android:background="@color/white"
+		    android:text="Testing! I'm the Tweet Question Container!!!"
 		    />
 	</LinearLayout>
 </LinearLayout>

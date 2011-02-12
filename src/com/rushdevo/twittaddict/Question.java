@@ -3,11 +3,6 @@ package com.rushdevo.twittaddict;
 public interface Question {
 	/**
 	 * 
-	 * @return the id of the UI element that contains this type of question
-	 */
-	public String getContainerId();
-	/**
-	 * 
 	 * Set the user's choice for an answer
 	 * @param index
 	 */

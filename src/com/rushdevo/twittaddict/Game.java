@@ -53,15 +53,23 @@ public class Game {
 		return this.state;
 	}
 	
+	public boolean isInPlay() {
+		return this.state == IN_PLAY;
+	}
+	public boolean isPending() {
+		return this.state == PENDING;
+	}
+	public boolean isComplete() {
+		return this.state == COMPLETE;
+	}
+	
 	public Question getNextQuestion() {
-		Question question;
 		// Generate question of random type (tweet or user)
 		if (new Random().nextBoolean()) {
-			question = generateTweetQuestion();
+			return generateTweetQuestion();
 		} else {
-			question = generateUserQuestion();
+			return generateUserQuestion();
 		}
-		return question;
 	}
 	
 	public TwitterUser getUser() {
@@ -204,11 +212,11 @@ public class Game {
 		// If we've run through all the statuses, reload them from backup and start over
 		if (this.statuses.isEmpty()) this.statuses.addAll(this.backupStatuses);
 		// Return a random status from the list
-		int index = new Random().nextInt() % this.statuses.size();
+		int index = new Random().nextInt(this.statuses.size());
 		return this.statuses.remove(index);
 	}
 	private TwitterUser getRandomUser() {
-		int index = new Random().nextInt() % this.friends.size();
+		int index = new Random().nextInt(this.friends.size());
 		return this.friends.get(index);
 	}
 	private List<TwitterStatus> getThreeRandomStatuses(TwitterStatus status) {

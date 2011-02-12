@@ -19,6 +19,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rushdevo.twittaddict.data.TwittaddictData;
@@ -28,6 +32,7 @@ public class Twittaddict extends Activity implements Runnable {
 	private static String CALLBACK_URL = "twittaddict://twitterauth";
 	private static final int INIT_MESSAGE = 0;
 	private static final int TIMER_MESSAGE = 1;
+	private static final int NEXT_QUESTION_MESSAGE = 2;
 	private static final int GAME_LENGTH = 60;
 	private TwittaddictData db;
 	private Game game;
@@ -77,11 +82,31 @@ public class Twittaddict extends Activity implements Runnable {
     }
     
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	super.onCreateOptionsMenu(menu);
+    	MenuInflater inflater = getMenuInflater();
+    	inflater.inflate(R.menu.menu, menu);
+    	return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    	case R.id.exit:
+    		finish();
+    		return true;
+    	}
+    	return false;
+    }
+    
+    @Override
 	public void run() {
 		// Start the game
     	game = new Game(this);
     	game.start();
     	handler.sendEmptyMessage(INIT_MESSAGE);
+    	// Set up the first question
+    	handler.sendEmptyMessage(NEXT_QUESTION_MESSAGE);
 		// Deal with the timer
 		long timeStamp = System.currentTimeMillis() / 1000;
 		int seconds = GAME_LENGTH;
@@ -108,6 +133,21 @@ public class Twittaddict extends Activity implements Runnable {
 	    	Thread thread = new Thread(this);
 	    	thread.start();
     	}
+    }
+    
+    public void showNextQuestion() {
+    	if (game.isInPlay()) {
+    		Question question = game.getNextQuestion();
+    		LinearLayout tweetLayout = (LinearLayout)findViewById(R.id.tweet_question_container);
+    		LinearLayout userLayout = (LinearLayout)findViewById(R.id.user_question_container);
+    		if (question instanceof TweetQuestion) {
+    			tweetLayout.setVisibility(LinearLayout.VISIBLE);
+    			userLayout.setVisibility(LinearLayout.INVISIBLE);
+    		} else if (question instanceof UserQuestion) {
+    			userLayout.setVisibility(LinearLayout.VISIBLE);
+    			tweetLayout.setVisibility(LinearLayout.INVISIBLE);
+    		} // Else - TODO: what do we do...
+    	} // Else - TODO: what do we do...
     }
     
     private void authorizeOrStartGame() {
@@ -182,6 +222,9 @@ public class Twittaddict extends Activity implements Runnable {
     		case TIMER_MESSAGE:
     			TextView timerLabel = (TextView)findViewById(R.id.timer);
     			timerLabel.setText(Integer.toString(message.arg1));
+    			break;
+    		case NEXT_QUESTION_MESSAGE:
+    			showNextQuestion();
     			break;
     		}
     	}
