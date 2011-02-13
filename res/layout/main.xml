@@ -24,34 +24,58 @@
 		android:orientation="vertical"
 		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
-		android:visibility="invisible"
+		android:visibility="gone"
 		android:id="@+id/tweet_question_container">
 		<TextView
+			android:id="@+id/tweet_container"
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content"
 		    android:minHeight="100dip"
 		    android:layout_margin="10dip"
 		    android:padding="10dip"
-		    android:gravity="center"
+		    android:gravity="center_vertical"
 		    android:background="@color/white"
 		    android:textColor="@color/grey"
-		    android:text="Testing! I'm the Tweet Question Container!!!"
 		    />
 	</LinearLayout>
 	<LinearLayout
 		android:orientation="vertical"
 		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
-		android:visibility="invisible"
+		android:visibility="gone"
 		android:id="@+id/user_question_container">
 		<TextView
+			android:id="@+id/tweet1_container"
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content"
+		    android:minHeight="100dip"
 		    android:layout_margin="10dip"
 		    android:padding="10dip"
-		    android:gravity="center_horizontal"
+		    android:gravity="center_vertical"
 		    android:background="@color/white"
-		    android:text="Testing! I'm the Tweet Question Container!!!"
+		    android:textColor="@color/grey"
+		    />
+		<TextView
+			android:id="@+id/tweet2_container"
+			android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:minHeight="100dip"
+		    android:layout_margin="10dip"
+		    android:padding="10dip"
+		    android:gravity="center_vertical"
+		    android:background="@color/white"
+		    android:textColor="@color/grey"
+		    />
+		<TextView
+			android:id="@+id/tweet3_container"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:minHeight="100dip"
+		    android:layout_margin="10dip"
+		    android:padding="10dip"
+		    android:gravity="center_vertical"
+		    android:background="@color/white"
+		    android:textColor="@color/grey"
 		    />
 	</LinearLayout>
 </LinearLayout>
