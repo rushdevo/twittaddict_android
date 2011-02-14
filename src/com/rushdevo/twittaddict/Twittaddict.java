@@ -2,6 +2,10 @@ package com.rushdevo.twittaddict;
 
 import static com.rushdevo.twittaddict.constants.Twitter.CONSUMER;
 import static com.rushdevo.twittaddict.constants.Twitter.PROVIDER;
+
+import java.io.InputStream;
+import java.net.URL;
+
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.OAuth;
 import oauth.signpost.exception.OAuthCommunicationException;
@@ -14,6 +18,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,10 +27,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rushdevo.twittaddict.data.TwittaddictData;
+import com.rushdevo.twittaddict.twitter.TwitterUser;
 
 public class Twittaddict extends Activity implements Runnable {
 	
@@ -147,8 +155,16 @@ public class Twittaddict extends Activity implements Runnable {
     	// Set the tweet text
     	TextView tweetView = (TextView)findViewById(R.id.tweet_container);
     	tweetView.setText(question.getStatus().getText());
-    	// TODO: Display Possible User Avatars
-    	
+    	// Display Possible User Avatars
+    	ImageView userView = (ImageView)findViewById(R.id.user1);
+    	Drawable drawable = loadAvatar(question.getUser1());
+    	userView.setImageDrawable(drawable);
+    	userView = (ImageView)findViewById(R.id.user2);
+    	drawable = loadAvatar(question.getUser2());
+    	userView.setImageDrawable(drawable);
+    	userView = (ImageView)findViewById(R.id.user3);
+    	drawable = loadAvatar(question.getUser3());
+    	userView.setImageDrawable(drawable);
     	// Display the container
     	LinearLayout tweetLayout = (LinearLayout)findViewById(R.id.tweet_question_container);
 		LinearLayout userLayout = (LinearLayout)findViewById(R.id.user_question_container);
@@ -164,14 +180,29 @@ public class Twittaddict extends Activity implements Runnable {
     	tweetView.setText(question.getStatus2().getText());
     	tweetView = (TextView)findViewById(R.id.tweet3_container);
     	tweetView.setText(question.getStatus3().getText());
-    	// TODO: Display User Avatar
-    	
+    	// Display User Avatar
+    	ImageView userView = (ImageView)findViewById(R.id.user);
+    	Drawable drawable = loadAvatar(question.getUser());
+    	userView.setImageDrawable(drawable);
     	// Display the container
     	LinearLayout tweetLayout = (LinearLayout)findViewById(R.id.tweet_question_container);
 		LinearLayout userLayout = (LinearLayout)findViewById(R.id.user_question_container);
 		userLayout.setVisibility(LinearLayout.VISIBLE);
 		tweetLayout.setVisibility(LinearLayout.GONE);
     }
+    
+    private Drawable loadAvatar(TwitterUser user) {
+    	try {
+    		URL url = new URL(user.getAvatar());
+    		InputStream is = (InputStream)url.getContent();
+    		Drawable d = Drawable.createFromStream(is, user.getName());
+    		return d;
+    	} catch (Exception e) {
+    		debug(e);
+    		return getResources().getDrawable(R.drawable.default_avatar);
+    	}
+    }
+    
     private void authorizeOrStartGame() {
     	if (authorized(CONSUMER)) {
         	if (game == null || !game.getSuccess()) startGame();

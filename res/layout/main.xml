@@ -30,13 +30,62 @@
 			android:id="@+id/tweet_container"
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content"
-		    android:minHeight="100dip"
+		    android:minHeight="80dip"
 		    android:layout_margin="10dip"
 		    android:padding="10dip"
 		    android:gravity="center_vertical"
 		    android:background="@color/white"
 		    android:textColor="@color/grey"
 		    />
+		<LinearLayout
+			android:id="@+id/three_users_container"
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal">
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:background="@color/white"
+		    	android:textColor="@color/grey"
+		    	android:padding="5dip">
+				<ImageView
+					android:id="@+id/user1"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				/>
+			</LinearLayout>
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:background="@color/white"
+		    	android:textColor="@color/grey"
+		    	android:padding="5dip">
+				<ImageView
+					android:id="@+id/user2"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				/>
+			</LinearLayout>
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:background="@color/white"
+		    	android:textColor="@color/grey"
+		    	android:padding="5dip">
+				<ImageView
+					android:id="@+id/user3"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				/>
+			</LinearLayout>
+		</LinearLayout>
 	</LinearLayout>
 	<LinearLayout
 		android:orientation="vertical"
@@ -48,7 +97,7 @@
 			android:id="@+id/tweet1_container"
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content"
-		    android:minHeight="100dip"
+		    android:minHeight="80dip"
 		    android:layout_margin="10dip"
 		    android:padding="10dip"
 		    android:gravity="center_vertical"
@@ -59,7 +108,7 @@
 			android:id="@+id/tweet2_container"
 			android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content"
-		    android:minHeight="100dip"
+		    android:minHeight="80dip"
 		    android:layout_margin="10dip"
 		    android:padding="10dip"
 		    android:gravity="center_vertical"
@@ -70,12 +119,33 @@
 			android:id="@+id/tweet3_container"
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content"
-		    android:minHeight="100dip"
+		    android:minHeight="80dip"
 		    android:layout_margin="10dip"
 		    android:padding="10dip"
 		    android:gravity="center_vertical"
 		    android:background="@color/white"
 		    android:textColor="@color/grey"
 		    />
+		<LinearLayout
+			android:id="@+id/one_user_container"
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal">
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:background="@color/white"
+		    	android:textColor="@color/grey"
+		    	android:padding="5dip">
+				<ImageView
+					android:id="@+id/user"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+				/>
+			</LinearLayout>
+		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>
