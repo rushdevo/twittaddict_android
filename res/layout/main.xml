@@ -93,39 +93,66 @@
 		android:layout_width="fill_parent"
 		android:visibility="gone"
 		android:id="@+id/user_question_container">
-		<TextView
-			android:id="@+id/tweet1_container"
-		    android:layout_width="fill_parent" 
-		    android:layout_height="wrap_content"
-		    android:minHeight="80dip"
-		    android:layout_margin="10dip"
-		    android:padding="10dip"
-		    android:gravity="center_vertical"
-		    android:background="@color/white"
-		    android:textColor="@color/grey"
-		    />
-		<TextView
-			android:id="@+id/tweet2_container"
-			android:layout_width="fill_parent" 
-		    android:layout_height="wrap_content"
-		    android:minHeight="80dip"
-		    android:layout_margin="10dip"
-		    android:padding="10dip"
-		    android:gravity="center_vertical"
-		    android:background="@color/white"
-		    android:textColor="@color/grey"
-		    />
-		<TextView
-			android:id="@+id/tweet3_container"
-		    android:layout_width="fill_parent" 
-		    android:layout_height="wrap_content"
-		    android:minHeight="80dip"
-		    android:layout_margin="10dip"
-		    android:padding="10dip"
-		    android:gravity="center_vertical"
-		    android:background="@color/white"
-		    android:textColor="@color/grey"
-		    />
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent">
+			<TextView
+				android:id="@+id/tweet1_container"
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:minHeight="80dip"
+			    android:layout_margin="10dip"
+			    android:padding="10dip"
+			    android:gravity="center_vertical"
+			    android:background="@color/white"
+			    android:textColor="@color/grey"
+			    />
+			<ImageView
+				android:id="@+id/tweet1_answered"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:visibility="gone" />
+		</LinearLayout>
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent">
+			<TextView
+				android:id="@+id/tweet2_container"
+				android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:minHeight="80dip"
+			    android:layout_margin="10dip"
+			    android:padding="10dip"
+			    android:gravity="center_vertical"
+			    android:background="@color/white"
+			    android:textColor="@color/grey"
+			    />
+			<ImageView
+				android:id="@+id/tweet2_answered"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:visibility="gone" />
+		</LinearLayout>
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent">
+			<TextView
+				android:id="@+id/tweet3_container"
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:minHeight="80dip"
+			    android:layout_margin="10dip"
+			    android:padding="10dip"
+			    android:gravity="center_vertical"
+			    android:background="@color/white"
+			    android:textColor="@color/grey"
+			    />
+			<ImageView
+				android:id="@+id/tweet3_answered"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:visibility="gone" />
+		</LinearLayout>
 		<LinearLayout
 			android:id="@+id/one_user_container"
 			android:orientation="horizontal"

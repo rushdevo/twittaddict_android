@@ -19,21 +19,26 @@ public final class R {
     public static final class drawable {
         public static final int bg=0x7f020000;
         public static final int bg_repeat=0x7f020001;
-        public static final int default_avatar=0x7f020002;
-        public static final int hourglass=0x7f020003;
-        public static final int icon=0x7f020004;
+        public static final int correct=0x7f020002;
+        public static final int default_avatar=0x7f020003;
+        public static final int hourglass=0x7f020004;
+        public static final int icon=0x7f020005;
+        public static final int wrong=0x7f020006;
     }
     public static final class id {
-        public static final int exit=0x7f07000d;
-        public static final int one_user_container=0x7f07000b;
+        public static final int exit=0x7f070010;
+        public static final int one_user_container=0x7f07000e;
         public static final int three_users_container=0x7f070003;
         public static final int timer=0x7f070000;
+        public static final int tweet1_answered=0x7f070009;
         public static final int tweet1_container=0x7f070008;
-        public static final int tweet2_container=0x7f070009;
-        public static final int tweet3_container=0x7f07000a;
+        public static final int tweet2_answered=0x7f07000b;
+        public static final int tweet2_container=0x7f07000a;
+        public static final int tweet3_answered=0x7f07000d;
+        public static final int tweet3_container=0x7f07000c;
         public static final int tweet_container=0x7f070002;
         public static final int tweet_question_container=0x7f070001;
-        public static final int user=0x7f07000c;
+        public static final int user=0x7f07000f;
         public static final int user1=0x7f070004;
         public static final int user2=0x7f070005;
         public static final int user3=0x7f070006;

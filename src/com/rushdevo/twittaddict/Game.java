@@ -31,6 +31,8 @@ public class Game {
 	public static final int COMPLETE = 2;
 	private int state;
 	private Integer uniqueUserStatusCount;
+	private Integer score;
+	private Question currentQuestion;
 	
 	public Game(Context ctx) {
 		messages = new HashSet<String>();
@@ -39,6 +41,7 @@ public class Game {
 		initializeFriends(ctx);
 		initializeStatuses(ctx);
 		this.state = PENDING;
+		this.score = 0;
 	}
 	
 	public void start() {
@@ -66,9 +69,34 @@ public class Game {
 	public Question getNextQuestion() {
 		// Generate question of random type (tweet or user)
 		if (new Random().nextBoolean()) {
-			return generateTweetQuestion();
+			currentQuestion = generateTweetQuestion();
 		} else {
-			return generateUserQuestion();
+			currentQuestion = generateUserQuestion();
+		}
+		return currentQuestion;
+	}
+	
+	public boolean setChoiceForQuestion(int index) {
+		if (currentQuestion == null) {
+			return false;
+		} else if (currentQuestion.isAnswered()) {
+			return false;
+		} else {
+			currentQuestion.setChoice(index);
+			if (currentQuestion.isCorrect()) {
+				this.score += 10;
+			} else {
+				this.score -= 5;
+			}
+			return true;
+		}
+	}
+	
+	public boolean currentAnswerIsCorrect() {
+		if (currentQuestion.isAnswered()) {
+			return currentQuestion.isCorrect();
+		} else {
+			return false;
 		}
 	}
 	

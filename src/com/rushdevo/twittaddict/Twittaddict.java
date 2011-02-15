@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,22 +36,66 @@ import android.widget.TextView;
 import com.rushdevo.twittaddict.data.TwittaddictData;
 import com.rushdevo.twittaddict.twitter.TwitterUser;
 
-public class Twittaddict extends Activity implements Runnable {
+public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	
 	private static String CALLBACK_URL = "twittaddict://twitterauth";
 	private static final int INIT_MESSAGE = 0;
 	private static final int TIMER_MESSAGE = 1;
+	private static final int NEXT_QUESTION_MESSAGE = 2;
 	private static final int GAME_LENGTH = 60;
 	private TwittaddictData db;
 	private Game game;
 	private boolean initializing = false;
 	private ProgressDialog progressDialog;
 	
+	// Timer
+	TextView timerLabel;
+	private Long answeredTimestamp;
+	
+	// User Question views
+	private View userLayout;
+	private ImageView userView;
+	private TextView tweet1View;
+	private TextView tweet2View;
+	private TextView tweet3View;
+	// Tweet Question views
+	private View tweetLayout;
+	private TextView tweetView;
+	private ImageView user1View;
+	private ImageView user2View;
+	private ImageView user3View;
+	private ImageView tweet1Answered;
+	private ImageView tweet2Answered;
+	private ImageView tweet3Answered;
+	
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         db = new TwittaddictData(this);
+        // Init view elements
+        timerLabel = (TextView)findViewById(R.id.timer);
+        tweetLayout = (LinearLayout)findViewById(R.id.tweet_question_container);
+		userLayout = (LinearLayout)findViewById(R.id.user_question_container);
+        userView = (ImageView)findViewById(R.id.user);
+        tweet1View = (TextView)findViewById(R.id.tweet1_container);
+        tweet1View.setOnClickListener(this);
+        tweet2View = (TextView)findViewById(R.id.tweet2_container);
+        tweet2View.setOnClickListener(this);
+        tweet3View = (TextView)findViewById(R.id.tweet3_container);
+        tweet3View.setOnClickListener(this);
+        tweetView = (TextView)findViewById(R.id.tweet_container);
+    	user1View = (ImageView)findViewById(R.id.user1);
+    	user1View.setOnClickListener(this);
+    	user2View = (ImageView)findViewById(R.id.user2);
+    	user2View.setOnClickListener(this);
+    	user3View = (ImageView)findViewById(R.id.user3);
+    	user3View.setOnClickListener(this);
+    	tweet1Answered = (ImageView)findViewById(R.id.tweet1_answered);
+    	tweet2Answered = (ImageView)findViewById(R.id.tweet2_answered);
+    	tweet3Answered = (ImageView)findViewById(R.id.tweet3_answered);
+    	answeredTimestamp = null;
     }
     
     @Override
@@ -88,6 +133,29 @@ public class Twittaddict extends Activity implements Runnable {
     	}
     }
     
+    public void onClick(View v) {
+		switch(v.getId()) {
+		case R.id.tweet1_container:
+			setAnswer(1, v);
+			break;
+		case R.id.tweet2_container:
+			setAnswer(2, v);
+			break;
+		case R.id.tweet3_container:
+			setAnswer(3, v);
+			break;
+		case R.id.user1:
+			setAnswer(1, v);
+			break;
+		case R.id.user2:
+			setAnswer(2, v);
+			break;
+		case R.id.user3:
+			setAnswer(3, v);
+			break;
+		}
+	}
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
@@ -116,6 +184,7 @@ public class Twittaddict extends Activity implements Runnable {
 		long timeStamp = System.currentTimeMillis() / 1000;
 		int seconds = GAME_LENGTH;
 		while (seconds > 0) {
+			// Update timer
 			int diff = GAME_LENGTH - (int)((System.currentTimeMillis() / 1000) - timeStamp);
 			if (diff < 0) diff = 0;
 			if (diff != seconds) {
@@ -124,6 +193,11 @@ public class Twittaddict extends Activity implements Runnable {
         		msg.what = TIMER_MESSAGE;
         		msg.arg1 = seconds;
         		handler.sendMessage(msg);
+			}
+			// Move to next question
+			if (answeredTimestamp != null && (System.currentTimeMillis() - answeredTimestamp) > 500) {
+				answeredTimestamp = null;
+				handler.sendEmptyMessage(NEXT_QUESTION_MESSAGE);
 			}
 		}
 		game.finish();
@@ -151,42 +225,82 @@ public class Twittaddict extends Activity implements Runnable {
     	} // Else - TODO: what do we do...
     }
     
+    private void setAnswer(int index, View v) {
+    	if (game != null && game.isInPlay() && game.setChoiceForQuestion(index)) {
+    		if (game.currentAnswerIsCorrect()) {
+    			// Show green checkmark
+    			showCorrect(index, v);
+    		} else {
+    			// Show red x
+    			showIncorrect(index, v);
+    		}
+    		answeredTimestamp = System.currentTimeMillis();
+    	}
+    }
+    
+    private void showCorrect(int index, View v) {
+    	Drawable d = getResources().getDrawable(R.drawable.correct);
+    	showAnswered(index, v, d);
+    }
+    
+    private void showIncorrect(int index, View v) {
+    	Drawable d = getResources().getDrawable(R.drawable.wrong);
+    	showAnswered(index, v, d);
+    }
+    
+    private void showAnswered(int index, View answerView, Drawable answeredImage) {
+    	if (answerView instanceof TextView) {
+    		ImageView view;
+    		if (index == 1) {
+    			tweet1View.setVisibility(View.GONE);
+    			view = tweet1Answered;
+    		} else if (index == 2) {
+    			tweet2View.setVisibility(View.GONE);
+    			view = tweet2Answered;
+    		} else {
+    			tweet3View.setVisibility(View.GONE);
+    			view = tweet3Answered;
+    		}
+    		displayAnswered(answeredImage, view);
+    	} else {
+    		displayAnswered(answeredImage, (ImageView)answerView);
+    	}
+    }
+    
+    private void displayAnswered(Drawable answeredImage, ImageView container) {
+    	container.setImageDrawable(answeredImage);
+    }
+    
     private void displayTweetQuestion(TweetQuestion question) {
     	// Set the tweet text
-    	TextView tweetView = (TextView)findViewById(R.id.tweet_container);
     	tweetView.setText(question.getStatus().getText());
     	// Display Possible User Avatars
-    	ImageView userView = (ImageView)findViewById(R.id.user1);
     	Drawable drawable = loadAvatar(question.getUser1());
-    	userView.setImageDrawable(drawable);
-    	userView = (ImageView)findViewById(R.id.user2);
+    	user1View.setImageDrawable(drawable);
     	drawable = loadAvatar(question.getUser2());
-    	userView.setImageDrawable(drawable);
-    	userView = (ImageView)findViewById(R.id.user3);
+    	user2View.setImageDrawable(drawable);
     	drawable = loadAvatar(question.getUser3());
-    	userView.setImageDrawable(drawable);
+    	user3View.setImageDrawable(drawable);
     	// Display the container
-    	LinearLayout tweetLayout = (LinearLayout)findViewById(R.id.tweet_question_container);
-		LinearLayout userLayout = (LinearLayout)findViewById(R.id.user_question_container);
     	tweetLayout.setVisibility(LinearLayout.VISIBLE);
 		userLayout.setVisibility(LinearLayout.GONE);
     }
     
     private void displayUserQuestion(UserQuestion question) {
     	// Set the three tweet texts
-    	TextView tweetView = (TextView)findViewById(R.id.tweet1_container);
-    	tweetView.setText(question.getStatus1().getText());
-    	tweetView = (TextView)findViewById(R.id.tweet2_container);
-    	tweetView.setText(question.getStatus2().getText());
-    	tweetView = (TextView)findViewById(R.id.tweet3_container);
-    	tweetView.setText(question.getStatus3().getText());
+    	tweet1View.setText(question.getStatus1().getText());
+    	tweet1View.setVisibility(View.VISIBLE);
+    	tweet1Answered.setVisibility(View.GONE);
+    	tweet2View.setText(question.getStatus2().getText());
+    	tweet2View.setVisibility(View.VISIBLE);
+    	tweet2Answered.setVisibility(View.GONE);
+    	tweet3View.setText(question.getStatus3().getText());
+    	tweet3View.setVisibility(View.VISIBLE);
+    	tweet3Answered.setVisibility(View.GONE);
     	// Display User Avatar
-    	ImageView userView = (ImageView)findViewById(R.id.user);
     	Drawable drawable = loadAvatar(question.getUser());
     	userView.setImageDrawable(drawable);
     	// Display the container
-    	LinearLayout tweetLayout = (LinearLayout)findViewById(R.id.tweet_question_container);
-		LinearLayout userLayout = (LinearLayout)findViewById(R.id.user_question_container);
 		userLayout.setVisibility(LinearLayout.VISIBLE);
 		tweetLayout.setVisibility(LinearLayout.GONE);
     }
@@ -275,8 +389,10 @@ public class Twittaddict extends Activity implements Runnable {
         		}
         		break;
     		case TIMER_MESSAGE:
-    			TextView timerLabel = (TextView)findViewById(R.id.timer);
     			timerLabel.setText(Integer.toString(message.arg1));
+    			break;
+    		case NEXT_QUESTION_MESSAGE:
+    			showNextQuestion();
     			break;
     		}
     	}

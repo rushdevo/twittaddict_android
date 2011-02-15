@@ -17,6 +17,7 @@ public class TweetQuestion implements Question {
 		this.user1 = users.get(0);
 		this.user2 = users.get(1);
 		this.user3 = users.get(2);
+		this.choice = null;
 	}
 	
 	public TwitterStatus getStatus() {
@@ -48,7 +49,11 @@ public class TweetQuestion implements Question {
 		}
 	}
 	
+	public boolean isAnswered() {
+		return this.choice != null;
+	}
+	
 	public boolean isCorrect() {
-		return this.choice != null && this.choice == this.status.getUser();
+		return isAnswered() && this.choice == this.status.getUser();
 	}
 }
