@@ -3,5 +3,6 @@
 	<color name="white">#ffffffff</color>
 	<color name="grey">#ff555555</color>
 	<color name="light_blue">#ffb3e2f6</color>
+	<color name="medium_blue">#ff69aac5</color>
 	<color name="dark_blue">#ff324f85</color>
 </resources>

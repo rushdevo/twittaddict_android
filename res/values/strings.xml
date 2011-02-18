@@ -5,6 +5,8 @@
     <string name="exit_shortcut">x</string>
     <string name="loading_title">Loading...</string>
     <string name="loading_message">Think you know your Twitter friends?\n\nMatch the Tweets to the Tweeters to find out!</string>
+    <string name="score">Score:</string>
+    <string name="start_score">0</string>
     
     <string name="error_alert_title">Something Went Wrong...</string>
     <string name="oauth_failure">Unable to get authorization from Twitter.</string>

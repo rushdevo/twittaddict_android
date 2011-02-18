@@ -11,9 +11,10 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int dark_blue=0x7f040003;
+        public static final int dark_blue=0x7f040004;
         public static final int grey=0x7f040001;
         public static final int light_blue=0x7f040002;
+        public static final int medium_blue=0x7f040003;
         public static final int white=0x7f040000;
     }
     public static final class drawable {
@@ -26,23 +27,22 @@ public final class R {
         public static final int wrong=0x7f020006;
     }
     public static final class id {
-        public static final int exit=0x7f070010;
-        public static final int one_user_container=0x7f07000e;
-        public static final int three_users_container=0x7f070003;
+        public static final int correct_marker=0x7f070001;
+        public static final int exit=0x7f07000f;
+        public static final int one_user_container=0x7f07000d;
+        public static final int score_container=0x7f070002;
+        public static final int three_users_container=0x7f070005;
         public static final int timer=0x7f070000;
-        public static final int tweet1_answered=0x7f070009;
-        public static final int tweet1_container=0x7f070008;
-        public static final int tweet2_answered=0x7f07000b;
-        public static final int tweet2_container=0x7f07000a;
-        public static final int tweet3_answered=0x7f07000d;
+        public static final int tweet1_container=0x7f07000a;
+        public static final int tweet2_container=0x7f07000b;
         public static final int tweet3_container=0x7f07000c;
-        public static final int tweet_container=0x7f070002;
-        public static final int tweet_question_container=0x7f070001;
-        public static final int user=0x7f07000f;
-        public static final int user1=0x7f070004;
-        public static final int user2=0x7f070005;
-        public static final int user3=0x7f070006;
-        public static final int user_question_container=0x7f070007;
+        public static final int tweet_container=0x7f070004;
+        public static final int tweet_question_container=0x7f070003;
+        public static final int user=0x7f07000e;
+        public static final int user1=0x7f070006;
+        public static final int user2=0x7f070007;
+        public static final int user3=0x7f070008;
+        public static final int user_question_container=0x7f070009;
     }
     public static final class layout {
         public static final int main=0x7f030000;
@@ -52,21 +52,23 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050000;
-        public static final int bad_friend_response_failure=0x7f050009;
-        public static final int bad_response_failure=0x7f050008;
-        public static final int bad_status_response_failure=0x7f05000b;
-        public static final int bad_user_response_failure=0x7f05000a;
-        public static final int communication_failure=0x7f050007;
-        public static final int error_alert_title=0x7f050005;
+        public static final int bad_friend_response_failure=0x7f05000b;
+        public static final int bad_response_failure=0x7f05000a;
+        public static final int bad_status_response_failure=0x7f05000d;
+        public static final int bad_user_response_failure=0x7f05000c;
+        public static final int communication_failure=0x7f050009;
+        public static final int error_alert_title=0x7f050007;
         public static final int exit_label=0x7f050001;
         public static final int exit_shortcut=0x7f050002;
         public static final int loading_message=0x7f050004;
         public static final int loading_title=0x7f050003;
-        public static final int no_friends_failure=0x7f05000d;
-        public static final int no_statuses_failure=0x7f05000e;
-        public static final int oauth_failure=0x7f050006;
-        public static final int screen_name_failure=0x7f05000c;
-        public static final int start_time=0x7f050010;
-        public static final int unknown_user=0x7f05000f;
+        public static final int no_friends_failure=0x7f05000f;
+        public static final int no_statuses_failure=0x7f050010;
+        public static final int oauth_failure=0x7f050008;
+        public static final int score=0x7f050005;
+        public static final int screen_name_failure=0x7f05000e;
+        public static final int start_score=0x7f050006;
+        public static final int start_time=0x7f050012;
+        public static final int unknown_user=0x7f050011;
     }
 }

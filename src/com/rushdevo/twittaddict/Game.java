@@ -100,6 +100,10 @@ public class Game {
 		}
 	}
 	
+	public Integer getScore() {
+		return this.score;
+	}
+	
 	public TwitterUser getUser() {
 		return this.user;
 	}

@@ -41,7 +41,6 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	private static String CALLBACK_URL = "twittaddict://twitterauth";
 	private static final int INIT_MESSAGE = 0;
 	private static final int TIMER_MESSAGE = 1;
-	private static final int NEXT_QUESTION_MESSAGE = 2;
 	private static final int GAME_LENGTH = 60;
 	private TwittaddictData db;
 	private Game game;
@@ -50,7 +49,6 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	
 	// Timer
 	TextView timerLabel;
-	private Long answeredTimestamp;
 	
 	// User Question views
 	private View userLayout;
@@ -64,10 +62,9 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	private ImageView user1View;
 	private ImageView user2View;
 	private ImageView user3View;
-	private ImageView tweet1Answered;
-	private ImageView tweet2Answered;
-	private ImageView tweet3Answered;
-	
+	// Score area views
+	private TextView scoreContainer;
+	private ImageView correctMarker;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,10 +89,8 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     	user2View.setOnClickListener(this);
     	user3View = (ImageView)findViewById(R.id.user3);
     	user3View.setOnClickListener(this);
-    	tweet1Answered = (ImageView)findViewById(R.id.tweet1_answered);
-    	tweet2Answered = (ImageView)findViewById(R.id.tweet2_answered);
-    	tweet3Answered = (ImageView)findViewById(R.id.tweet3_answered);
-    	answeredTimestamp = null;
+    	scoreContainer = (TextView)findViewById(R.id.score_container);
+    	correctMarker = (ImageView)findViewById(R.id.correct_marker);
     }
     
     @Override
@@ -194,11 +189,6 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
         		msg.arg1 = seconds;
         		handler.sendMessage(msg);
 			}
-			// Move to next question
-			if (answeredTimestamp != null && (System.currentTimeMillis() - answeredTimestamp) > 500) {
-				answeredTimestamp = null;
-				handler.sendEmptyMessage(NEXT_QUESTION_MESSAGE);
-			}
 		}
 		game.finish();
 	}
@@ -234,41 +224,21 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     			// Show red x
     			showIncorrect(index, v);
     		}
-    		answeredTimestamp = System.currentTimeMillis();
+    		updateScore();
+    		showNextQuestion();
     	}
     }
     
     private void showCorrect(int index, View v) {
-    	Drawable d = getResources().getDrawable(R.drawable.correct);
-    	showAnswered(index, v, d);
+    	correctMarker.setImageDrawable(getResources().getDrawable(R.drawable.correct));
     }
     
     private void showIncorrect(int index, View v) {
-    	Drawable d = getResources().getDrawable(R.drawable.wrong);
-    	showAnswered(index, v, d);
+    	correctMarker.setImageDrawable(getResources().getDrawable(R.drawable.wrong));
     }
     
-    private void showAnswered(int index, View answerView, Drawable answeredImage) {
-    	if (answerView instanceof TextView) {
-    		ImageView view;
-    		if (index == 1) {
-    			tweet1View.setVisibility(View.GONE);
-    			view = tweet1Answered;
-    		} else if (index == 2) {
-    			tweet2View.setVisibility(View.GONE);
-    			view = tweet2Answered;
-    		} else {
-    			tweet3View.setVisibility(View.GONE);
-    			view = tweet3Answered;
-    		}
-    		displayAnswered(answeredImage, view);
-    	} else {
-    		displayAnswered(answeredImage, (ImageView)answerView);
-    	}
-    }
-    
-    private void displayAnswered(Drawable answeredImage, ImageView container) {
-    	container.setImageDrawable(answeredImage);
+    private void updateScore() {
+    	scoreContainer.setText(game.getScore().toString());
     }
     
     private void displayTweetQuestion(TweetQuestion question) {
@@ -289,14 +259,8 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     private void displayUserQuestion(UserQuestion question) {
     	// Set the three tweet texts
     	tweet1View.setText(question.getStatus1().getText());
-    	tweet1View.setVisibility(View.VISIBLE);
-    	tweet1Answered.setVisibility(View.GONE);
     	tweet2View.setText(question.getStatus2().getText());
-    	tweet2View.setVisibility(View.VISIBLE);
-    	tweet2Answered.setVisibility(View.GONE);
     	tweet3View.setText(question.getStatus3().getText());
-    	tweet3View.setVisibility(View.VISIBLE);
-    	tweet3Answered.setVisibility(View.GONE);
     	// Display User Avatar
     	Drawable drawable = loadAvatar(question.getUser());
     	userView.setImageDrawable(drawable);
@@ -390,9 +354,6 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
         		break;
     		case TIMER_MESSAGE:
     			timerLabel.setText(Integer.toString(message.arg1));
-    			break;
-    		case NEXT_QUESTION_MESSAGE:
-    			showNextQuestion();
     			break;
     		}
     	}
