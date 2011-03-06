@@ -13,6 +13,7 @@ public class UserQuestion implements Question {
 	private TwitterStatus choice;
 	
 	public UserQuestion(TwitterUser user, List<TwitterStatus> statuses) {
+		user.initializeDrawable();
 		this.user = user;
 		this.status1 = statuses.get(0);
 		this.status2 = statuses.get(1);

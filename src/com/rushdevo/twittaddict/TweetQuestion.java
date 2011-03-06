@@ -14,6 +14,9 @@ public class TweetQuestion implements Question {
 	
 	public TweetQuestion(TwitterStatus status, List<TwitterUser> users) {
 		this.status = status;
+		for (TwitterUser user : users) {
+			user.initializeDrawable();
+		}
 		this.user1 = users.get(0);
 		this.user2 = users.get(1);
 		this.user3 = users.get(2);

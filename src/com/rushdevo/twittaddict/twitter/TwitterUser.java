@@ -1,12 +1,20 @@
 package com.rushdevo.twittaddict.twitter;
 
+import java.io.InputStream;
+import java.net.URL;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.graphics.drawable.Drawable;
+import android.os.Debug;
+import android.util.Log;
 
 public class TwitterUser {
 	private String screenName;
 	private String name;
 	private String avatar;
+	private Drawable avatarImage;
 	private String url;
 	private Long id;
 	private String description;
@@ -31,7 +39,24 @@ public class TwitterUser {
 			this.valid = false;
 		}
 	}
-
+	
+	public void initializeDrawable() {
+		try {
+    		URL url = new URL(this.avatar);
+    		InputStream is = (InputStream)url.getContent();
+    		this.avatarImage = Drawable.createFromStream(is, this.name);
+    	} catch (Exception e) {
+    		this.avatarImage = null;
+    	}
+	}
+	
+	public Drawable getAvatarImage() {
+		if (this.avatarImage == null) {
+			initializeDrawable();
+		}
+		return this.avatarImage;
+	}
+	
 	public void setScreenName(String screenName) {
 		this.screenName = screenName;
 	}

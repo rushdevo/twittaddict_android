@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 
@@ -33,6 +35,7 @@ public class Game {
 	private Integer uniqueUserStatusCount;
 	private Integer score;
 	private Question currentQuestion;
+	private Queue<Question> nextQuestions;
 	
 	public Game(Context ctx) {
 		messages = new HashSet<String>();
@@ -42,6 +45,11 @@ public class Game {
 		initializeStatuses(ctx);
 		this.state = PENDING;
 		this.score = 0;
+		this.nextQuestions = new LinkedList<Question>();
+		// Generate the first five questions
+		for (int i=0; i<5; i++) {
+			generateNextQuestion();
+		}
 	}
 	
 	public void start() {
@@ -67,13 +75,23 @@ public class Game {
 	}
 	
 	public Question getNextQuestion() {
-		// Generate question of random type (tweet or user)
-		if (new Random().nextBoolean()) {
-			currentQuestion = generateTweetQuestion();
-		} else {
-			currentQuestion = generateUserQuestion();
-		}
+		if (nextQuestions.isEmpty()) generateNextQuestion();
+		currentQuestion = nextQuestions.poll();
 		return currentQuestion;
+	}
+	
+	public boolean generateNextQuestion() {
+		if (nextQuestions.size() < 15) {
+			Question q;
+			// Generate question of random type (tweet or user)
+			if (new Random().nextBoolean()) {
+				q = generateTweetQuestion();
+			} else {
+				q = generateUserQuestion();
+			}
+			return nextQuestions.offer(q);
+		}
+		return false;
 	}
 	
 	public boolean setChoiceForQuestion(int index) {

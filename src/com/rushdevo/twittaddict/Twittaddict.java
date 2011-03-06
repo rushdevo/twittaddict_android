@@ -2,10 +2,6 @@ package com.rushdevo.twittaddict;
 
 import static com.rushdevo.twittaddict.constants.Twitter.CONSUMER;
 import static com.rushdevo.twittaddict.constants.Twitter.PROVIDER;
-
-import java.io.InputStream;
-import java.net.URL;
-
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.OAuth;
 import oauth.signpost.exception.OAuthCommunicationException;
@@ -53,6 +49,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	// User Question views
 	private View userLayout;
 	private ImageView userView;
+	private TextView userName;
 	private TextView tweet1View;
 	private TextView tweet2View;
 	private TextView tweet3View;
@@ -60,8 +57,11 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	private View tweetLayout;
 	private TextView tweetView;
 	private ImageView user1View;
+	private TextView user1Name;
 	private ImageView user2View;
+	private TextView user2Name;
 	private ImageView user3View;
+	private TextView user3Name;
 	// Score area views
 	private TextView scoreContainer;
 	private ImageView correctMarker;
@@ -76,6 +76,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
         tweetLayout = (LinearLayout)findViewById(R.id.tweet_question_container);
 		userLayout = (LinearLayout)findViewById(R.id.user_question_container);
         userView = (ImageView)findViewById(R.id.user);
+        userName = (TextView)findViewById(R.id.userName);
         tweet1View = (TextView)findViewById(R.id.tweet1_container);
         tweet1View.setOnClickListener(this);
         tweet2View = (TextView)findViewById(R.id.tweet2_container);
@@ -85,10 +86,13 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
         tweetView = (TextView)findViewById(R.id.tweet_container);
     	user1View = (ImageView)findViewById(R.id.user1);
     	user1View.setOnClickListener(this);
+    	user1Name = (TextView)findViewById(R.id.user1Name);
     	user2View = (ImageView)findViewById(R.id.user2);
     	user2View.setOnClickListener(this);
+    	user2Name = (TextView)findViewById(R.id.user2Name);
     	user3View = (ImageView)findViewById(R.id.user3);
     	user3View.setOnClickListener(this);
+    	user3Name = (TextView)findViewById(R.id.user3Name);
     	scoreContainer = (TextView)findViewById(R.id.score_container);
     	correctMarker = (ImageView)findViewById(R.id.correct_marker);
     }
@@ -189,6 +193,9 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
         		msg.arg1 = seconds;
         		handler.sendMessage(msg);
 			}
+			// Keep generating additional questions in the question queue so they are pre-loaded
+			// (Will maintain at most 5 in the queue, and then will do nothing on this call)
+			game.generateNextQuestion();
 		}
 		game.finish();
 	}
@@ -245,12 +252,15 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     	// Set the tweet text
     	tweetView.setText(question.getStatus().getText());
     	// Display Possible User Avatars
-    	Drawable drawable = loadAvatar(question.getUser1());
+    	Drawable drawable = getOrLoadAvatar(question.getUser1());
     	user1View.setImageDrawable(drawable);
-    	drawable = loadAvatar(question.getUser2());
+    	user1Name.setText(question.getUser1().getScreenName());
+    	drawable = getOrLoadAvatar(question.getUser2());
     	user2View.setImageDrawable(drawable);
-    	drawable = loadAvatar(question.getUser3());
+    	user2Name.setText(question.getUser2().getScreenName());
+    	drawable = getOrLoadAvatar(question.getUser3());
     	user3View.setImageDrawable(drawable);
+    	user3Name.setText(question.getUser3().getScreenName());
     	// Display the container
     	tweetLayout.setVisibility(LinearLayout.VISIBLE);
 		userLayout.setVisibility(LinearLayout.GONE);
@@ -262,23 +272,18 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     	tweet2View.setText(question.getStatus2().getText());
     	tweet3View.setText(question.getStatus3().getText());
     	// Display User Avatar
-    	Drawable drawable = loadAvatar(question.getUser());
+    	Drawable drawable = getOrLoadAvatar(question.getUser());
     	userView.setImageDrawable(drawable);
+    	userName.setText(question.getUser().getScreenName());
     	// Display the container
 		userLayout.setVisibility(LinearLayout.VISIBLE);
 		tweetLayout.setVisibility(LinearLayout.GONE);
     }
     
-    private Drawable loadAvatar(TwitterUser user) {
-    	try {
-    		URL url = new URL(user.getAvatar());
-    		InputStream is = (InputStream)url.getContent();
-    		Drawable d = Drawable.createFromStream(is, user.getName());
-    		return d;
-    	} catch (Exception e) {
-    		debug(e);
-    		return getResources().getDrawable(R.drawable.default_avatar);
-    	}
+    private Drawable getOrLoadAvatar(TwitterUser user) {
+    	Drawable d = user.getAvatarImage();
+    	if (d == null) d = getResources().getDrawable(R.drawable.default_avatar);
+    	return d;
     }
     
     private void authorizeOrStartGame() {
