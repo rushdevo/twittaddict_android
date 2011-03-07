@@ -59,4 +59,8 @@ public class TweetQuestion implements Question {
 	public boolean isCorrect() {
 		return isAnswered() && this.choice == this.status.getUser();
 	}
+	
+	public TwitterUser getCorrectUser() {
+		return this.status.getUser();
+	}
 }

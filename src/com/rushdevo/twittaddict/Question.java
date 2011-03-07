@@ -1,5 +1,7 @@
 package com.rushdevo.twittaddict;
 
+import com.rushdevo.twittaddict.twitter.TwitterUser;
+
 public interface Question {
 	/**
 	 * 
@@ -17,4 +19,9 @@ public interface Question {
 	 * @return true if the question has already been answered
 	 */
 	public boolean isAnswered();
+	/**
+	 * 
+	 * @return TwitterUser: the user associated with the correct answer to the question
+	 */
+	public TwitterUser getCorrectUser();
 }

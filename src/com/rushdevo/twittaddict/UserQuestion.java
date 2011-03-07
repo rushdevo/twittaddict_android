@@ -57,4 +57,8 @@ public class UserQuestion implements Question {
 	public boolean isCorrect() {
 		return isAnswered() && this.choice.getUser() == this.user;
 	}
+	
+	public TwitterUser getCorrectUser() {
+		return this.user;
+	}
 }

@@ -39,6 +39,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	private static final int TIMER_MESSAGE = 1;
 	private static final int GAME_LENGTH = 60;
 	private TwittaddictData db;
+	private Integer userId;
 	private Game game;
 	private boolean initializing = false;
 	private ProgressDialog progressDialog;
@@ -198,6 +199,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 			game.generateNextQuestion();
 		}
 		game.finish();
+		saveScore();
 	}
     
     public void startGame() {
@@ -232,6 +234,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     			showIncorrect(index, v);
     		}
     		updateScore();
+    		updateFriendStats();
     		showNextQuestion();
     	}
     }
@@ -246,6 +249,20 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     
     private void updateScore() {
     	scoreContainer.setText(game.getScore().toString());
+    }
+    
+    private void updateFriendStats() {
+    	TwitterUser friend = game.getCurrentQuestionUser();
+    	Cursor cursor = db.getFriendStat(friend);
+    	if (cursor.moveToNext()) {
+    		db.updateFriendStat(cursor.getLong(0), cursor.getInt(3), cursor.getInt(4), game.currentAnswerIsCorrect());
+    	} else {
+    		db.createFriendStat(friend, this.userId, game.currentAnswerIsCorrect());
+    	}
+    }
+    
+    private void saveScore() {
+    	db.saveHighScore(this.userId, game.getScore());
     }
     
     private void displayTweetQuestion(TweetQuestion question) {
@@ -323,9 +340,10 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     	Cursor cursor = db.getUsers();
     	if (cursor.moveToNext()) {
     		// We have the user saved
+    		this.userId = cursor.getInt(0);
     		String token = cursor.getString(1);
     		String tokenSecret = cursor.getString(2);
-    		if (token == null || tokenSecret == null) {
+    		if (this.userId == null || token == null || tokenSecret == null) {
     			// We have crappy data somehow
     			return false;
     		} else {
@@ -340,7 +358,10 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     }
     
     private void saveTokenAndSecret(AbstractOAuthConsumer consumer) {
-    	db.addUser(consumer.getToken(), consumer.getTokenSecret());
+    	int id = db.addUser(consumer.getToken(), consumer.getTokenSecret());
+    	if (id != -1) {
+    		this.userId = id;
+    	}
     }
     
     private Handler handler = new Handler() {

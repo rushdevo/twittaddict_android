@@ -118,6 +118,10 @@ public class Game {
 		}
 	}
 	
+	public TwitterUser getCurrentQuestionUser() {
+		return currentQuestion.getCorrectUser();
+	}
+	
 	public Integer getScore() {
 		return this.score;
 	}
