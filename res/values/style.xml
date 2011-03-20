@@ -18,6 +18,10 @@
 		<item name="android:padding">5dip</item>
 		<item name="android:layout_margin">5dip</item>
     </style>
+    <style name="AvatarView">
+	    <item name="android:layout_width">48px</item>
+	    <item name="android:layout_height">48px</item>
+    </style>
     <style name="TweetContainer">
     	<item name="android:layout_width">fill_parent</item>
 	    <item name="android:layout_height">wrap_content</item>

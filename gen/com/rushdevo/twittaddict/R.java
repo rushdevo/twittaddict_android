@@ -78,6 +78,7 @@ public final class R {
     public static final class style {
         public static final int AvatarContainer=0x7f060001;
         public static final int AvatarName=0x7f060000;
-        public static final int TweetContainer=0x7f060002;
+        public static final int AvatarView=0x7f060002;
+        public static final int TweetContainer=0x7f060003;
     }
 }

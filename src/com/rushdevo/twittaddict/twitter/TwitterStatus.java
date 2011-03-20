@@ -11,7 +11,7 @@ public class TwitterStatus {
 	
 	public TwitterStatus(JSONObject hash) {
 		try {
-			this.text = hash.getString("text");
+			this.text = hash.getString("text").replaceAll("\\s+", " ");
 			this.id = hash.getLong("id");
 			this.user = new TwitterUser(hash.getJSONObject("user"));
 			this.valid = true;
