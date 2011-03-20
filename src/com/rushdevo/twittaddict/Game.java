@@ -43,17 +43,17 @@ public class Game {
 		initializeUser(ctx);
 		initializeFriends(ctx);
 		initializeStatuses(ctx);
-		this.state = PENDING;
-		this.score = 0;
-		this.nextQuestions = new LinkedList<Question>();
-		// Generate the first five questions
-		for (int i=0; i<5; i++) {
-			generateNextQuestion();
-		}
+		initializeGame();
 	}
 	
 	public void start() {
 		this.state = IN_PLAY;
+	}
+	
+	public void restart() {
+		this.statuses.addAll(this.backupStatuses);
+		initializeGame();
+		start();
 	}
 	
 	public void finish() {
@@ -159,6 +159,16 @@ public class Game {
 	
 	public List<TwitterUser> getFriends() {
 		return this.friends;
+	}
+	
+	private void initializeGame() {
+		this.state = PENDING;
+		this.score = 0;
+		this.nextQuestions = new LinkedList<Question>();
+		// Generate the first five questions
+		for (int i=0; i<5; i++) {
+			generateNextQuestion();
+		}
 	}
 	
 	private void initializeUser(Context ctx) {

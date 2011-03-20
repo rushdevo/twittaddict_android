@@ -177,7 +177,7 @@ public class TwittaddictData extends SQLiteOpenHelper {
 	
 	public Cursor getHighScores() {
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor cursor = db.query(HIGH_SCORES_TABLE_NAME, HIGH_SCORE_COLUMNS, null, null, null, null, null);
+		Cursor cursor = db.query(HIGH_SCORES_TABLE_NAME, HIGH_SCORE_COLUMNS, null, null, null, null, "score DESC", "5");
 		ctx.startManagingCursor(cursor);
 		return cursor;
 	}

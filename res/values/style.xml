@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AvatarName">
-        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">80dip</item>
         <item name="android:padding">5dip</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@color/white</item>
         <item name="android:textColor">@color/grey</item>
         <item name="android:textSize">10px</item>
+        <item name="android:maxLines">1</item>
     </style>
     <style name="AvatarContainer">
 		<item name="android:orientation">vertical</item>
-		<item name="android:layout_width">wrap_content</item>
 		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">wrap_content</item>
 		<item name="android:gravity">center</item>
 		<item name="android:background">@color/white</item>
 		<item name="android:padding">5dip</item>

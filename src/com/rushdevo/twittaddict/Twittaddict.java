@@ -37,6 +37,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	private static String CALLBACK_URL = "twittaddict://twitterauth";
 	private static final int INIT_MESSAGE = 0;
 	private static final int TIMER_MESSAGE = 1;
+	private static final int RESTART_MESSAGE = 2;
 	private static final int GAME_LENGTH = 60;
 	private TwittaddictData db;
 	private Integer userId;
@@ -107,29 +108,33 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     @Override
     public void onResume() {
     	super.onResume();
-    	Uri uri = this.getIntent().getData();  
-    	if (uri != null && uri.toString().startsWith(CALLBACK_URL)) {  
-    	    String verifier = uri.getQueryParameter(OAuth.OAUTH_VERIFIER);  
-    	    // this will populate token and token_secret in consumer
-    	    try {
-				PROVIDER.retrieveAccessToken(CONSUMER, verifier);
-				saveTokenAndSecret(CONSUMER);
-				startGame();
-			} catch (OAuthMessageSignerException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthNotAuthorizedException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthExpectationFailedException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthCommunicationException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			}
+    	if (game != null && game.isComplete()) {
+    		restartGame();
     	} else {
-    		authorizeOrStartGame();
+	    	Uri uri = this.getIntent().getData();  
+	    	if (uri != null && uri.toString().startsWith(CALLBACK_URL)) {  
+	    	    String verifier = uri.getQueryParameter(OAuth.OAUTH_VERIFIER);  
+	    	    // this will populate token and token_secret in consumer
+	    	    try {
+					PROVIDER.retrieveAccessToken(CONSUMER, verifier);
+					saveTokenAndSecret(CONSUMER);
+					startGame();
+				} catch (OAuthMessageSignerException e) {
+					errorAlert(getString(R.string.oauth_failure));
+					debug(e);
+				} catch (OAuthNotAuthorizedException e) {
+					errorAlert(getString(R.string.oauth_failure));
+					debug(e);
+				} catch (OAuthExpectationFailedException e) {
+					errorAlert(getString(R.string.oauth_failure));
+					debug(e);
+				} catch (OAuthCommunicationException e) {
+					errorAlert(getString(R.string.oauth_failure));
+					debug(e);
+				}
+	    	} else {
+	    		authorizeOrStartGame();
+	    	}
     	}
     }
     
@@ -177,9 +182,14 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     @Override
 	public void run() {
 		// Start the game
-    	game = new Game(this);
-    	game.start();
-    	handler.sendEmptyMessage(INIT_MESSAGE);
+    	if (game == null) {
+    		game = new Game(this);
+    		game.start();
+    		handler.sendEmptyMessage(INIT_MESSAGE);
+    	} else {
+    		handler.sendEmptyMessage(RESTART_MESSAGE);
+    		game.restart();
+    	}
 		// Deal with the timer
 		long timeStamp = System.currentTimeMillis() / 1000;
 		int seconds = GAME_LENGTH;
@@ -200,6 +210,9 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 		}
 		game.finish();
 		saveScore();
+		Intent intent = new Intent(this, GameOverScreen.class);
+		intent.putExtra("score", game.getScore());
+		startActivity(intent);
 	}
     
     public void startGame() {
@@ -211,6 +224,11 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	    	Thread thread = new Thread(this);
 	    	thread.start();
     	}
+    }
+    
+    public void restartGame() {
+    	Thread thread = new Thread(this);
+    	thread.start();
     }
     
     public void showNextQuestion() {
@@ -381,6 +399,11 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     		case TIMER_MESSAGE:
     			timerLabel.setText(Integer.toString(message.arg1));
     			break;
+    		case RESTART_MESSAGE:
+    			timerLabel.setText(Integer.toString(GAME_LENGTH));
+        		correctMarker.setImageDrawable(null);
+        		scoreContainer.setText("0");
+        		break;
     		}
     	}
     };

@@ -18,7 +18,10 @@
 				<data android:scheme="twittaddict" android:host="twitterauth"></data>  
 			</intent-filter> 
         </activity>
-
+		
+		<activity android:name=".GameOverScreen"
+                  android:label="@string/game_over">
+        </activity>
     </application>
     <uses-sdk android:minSdkVersion="8" />
 

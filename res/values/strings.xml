@@ -20,4 +20,9 @@
     <string name="no_statuses_failure">Unable to retrieve statuses for </string>
     <string name="unknown_user">unknown twitter user</string>
     <string name="start_time">60</string>
+    
+    <string name="game_over">Game Over!</string>
+    <string name="your_score">Your Score:</string>
+    <string name="high_scores">High Scores:</string>
+    <string name="play_again">Play Again</string>
 </resources>
