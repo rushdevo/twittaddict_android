@@ -181,38 +181,47 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     
     @Override
 	public void run() {
-		// Start the game
-    	if (game == null) {
-    		game = new Game(this);
-    		game.start();
-    		handler.sendEmptyMessage(INIT_MESSAGE);
+    	boolean starting = game == null || game.isComplete();
+    	if (starting) {
+    		// Start the game
+        	if (game == null) {
+        		game = new Game(this);
+        		game.start();
+        		handler.sendEmptyMessage(INIT_MESSAGE);
+        	} else if (game.isComplete()){
+        		handler.sendEmptyMessage(RESTART_MESSAGE);
+        		game.restart();
+        	}
+        	// Start the other thread to generate additional questions
+        	Thread thread = new Thread(this);
+	    	thread.start();
+        	// Deal with the timer
+    		long timeStamp = System.currentTimeMillis() / 1000;
+    		int seconds = GAME_LENGTH;
+    		while (seconds > 0) {
+    			// Update timer
+    			int diff = GAME_LENGTH - (int)((System.currentTimeMillis() / 1000) - timeStamp);
+    			if (diff < 0) diff = 0;
+    			if (diff != seconds) {
+    				seconds = diff;
+    				Message msg = new Message();
+            		msg.what = TIMER_MESSAGE;
+            		msg.arg1 = seconds;
+            		handler.sendMessage(msg);
+    			}
+    		}
+    		game.finish();
+    		saveScore();
+    		Intent intent = new Intent(this, GameOverScreen.class);
+    		intent.putExtra("score", game.getScore());
+    		startActivity(intent);
     	} else {
-    		handler.sendEmptyMessage(RESTART_MESSAGE);
-    		game.restart();
+    		while (game.isInPlay()) {
+    			// Keep generating additional questions in the question queue so they are pre-loaded
+    			// (Will maintain at most 5 in the queue, and then will do nothing on this call)
+    			game.generateNextQuestion();
+    		}
     	}
-		// Deal with the timer
-		long timeStamp = System.currentTimeMillis() / 1000;
-		int seconds = GAME_LENGTH;
-		while (seconds > 0) {
-			// Update timer
-			int diff = GAME_LENGTH - (int)((System.currentTimeMillis() / 1000) - timeStamp);
-			if (diff < 0) diff = 0;
-			if (diff != seconds) {
-				seconds = diff;
-				Message msg = new Message();
-        		msg.what = TIMER_MESSAGE;
-        		msg.arg1 = seconds;
-        		handler.sendMessage(msg);
-			}
-			// Keep generating additional questions in the question queue so they are pre-loaded
-			// (Will maintain at most 5 in the queue, and then will do nothing on this call)
-			game.generateNextQuestion();
-		}
-		game.finish();
-		saveScore();
-		Intent intent = new Intent(this, GameOverScreen.class);
-		intent.putExtra("score", game.getScore());
-		startActivity(intent);
 	}
     
     public void startGame() {
