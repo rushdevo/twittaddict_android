@@ -21,7 +21,6 @@ import com.rushdevo.twittaddict.twitter.TwitterStatus;
 import com.rushdevo.twittaddict.twitter.TwitterUser;
 
 public class Game {
-	
 	private TwitterUser user;
 	private Boolean success;
 	private Set<String> messages;
@@ -159,6 +158,17 @@ public class Game {
 	
 	public List<TwitterUser> getFriends() {
 		return this.friends;
+	}
+	
+	public TwitterUser getFriendById(Long id) {
+		for (TwitterUser friend : this.friends) {
+			debug(" ******");
+			debug(" ****** Friend id: " + friend.getId());
+			debug(" *******       id: " + id);
+			debug(" *******");
+			if (friend.getId().equals(id)) return friend;
+		}
+		return null;
 	}
 	
 	private void initializeGame() {

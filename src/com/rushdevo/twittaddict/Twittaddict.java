@@ -214,6 +214,10 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     		saveScore();
     		Intent intent = new Intent(this, GameOverScreen.class);
     		intent.putExtra("score", game.getScore());
+    		intent.putExtra("user", game.getUser().getScreenName());
+    		TwitterUser bff = db.getBFF(game);
+    		intent.putExtra("bff", bff.getScreenName());
+    		intent.putExtra("bffAvatar", bff.getAvatar());
     		startActivity(intent);
     	} else {
     		while (game.isInPlay()) {

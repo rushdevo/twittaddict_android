@@ -85,7 +85,6 @@ public class Twitter {
 		StringBuffer idStr = new StringBuffer();
 		int count = 0;
 		while (iter.hasNext() && count < 100) {
-			iter.next();
 			idStr.append(iter.next());
 			count++;
 			if (iter.hasNext() && count < 100) idStr.append(",");
@@ -106,6 +105,13 @@ public class Twitter {
 			debug(e);
 			throw new TwitterException(ctx.getString(R.string.bad_user_response_failure));
 		}
+	}
+	
+	public static TwitterUser getUserById(Long id, Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
+		ArrayList<Long> ids = new ArrayList<Long>();
+		ids.add(id);
+		ArrayList<TwitterUser> users = getUsers(ids, ctx);
+		return users.get(0);
 	}
 	
 	public static ArrayList<TwitterStatus> getStatuses(Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {

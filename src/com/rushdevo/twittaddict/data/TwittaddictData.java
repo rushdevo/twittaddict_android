@@ -1,9 +1,6 @@
 package com.rushdevo.twittaddict.data;
 
 import static android.provider.BaseColumns._ID;
-import static com.rushdevo.twittaddict.data.UserColumns.USERS_TABLE_NAME;
-import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN;
-import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN_SECRET;
 import static com.rushdevo.twittaddict.data.FriendStats.FRIEND_STATS_ATTEMPTS;
 import static com.rushdevo.twittaddict.data.FriendStats.FRIEND_STATS_CORRECT;
 import static com.rushdevo.twittaddict.data.FriendStats.FRIEND_STATS_FRIEND;
@@ -15,8 +12,11 @@ import static com.rushdevo.twittaddict.data.HighScoreColumns.HIGH_SCORES_SCORE;
 import static com.rushdevo.twittaddict.data.HighScoreColumns.HIGH_SCORES_TABLE_NAME;
 import static com.rushdevo.twittaddict.data.HighScoreColumns.HIGH_SCORES_TIMESTAMP;
 import static com.rushdevo.twittaddict.data.HighScoreColumns.HIGH_SCORES_USER;
+import static com.rushdevo.twittaddict.data.UserColumns.USERS_TABLE_NAME;
+import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN;
+import static com.rushdevo.twittaddict.data.UserColumns.USERS_TOKEN_SECRET;
 
-import com.rushdevo.twittaddict.twitter.TwitterUser;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -25,6 +25,13 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.rushdevo.twittaddict.Game;
+import com.rushdevo.twittaddict.constants.Twitter;
+import com.rushdevo.twittaddict.exceptions.TwitterCommunicationException;
+import com.rushdevo.twittaddict.exceptions.TwitterException;
+import com.rushdevo.twittaddict.exceptions.TwitterOAuthException;
+import com.rushdevo.twittaddict.twitter.TwitterUser;
 
 public class TwittaddictData extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "twittaddict.db";
@@ -119,6 +126,46 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		Cursor cursor = db.query(FRIEND_STATS_TABLE_NAME, FRIEND_STAT_COLUMNS, null, null, null, null, null);
 		ctx.startManagingCursor(cursor);
 		return cursor;
+	}
+	
+	public Long getBFFId() {
+		Long id = null;
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor cursor = db.query(FRIEND_STATS_TABLE_NAME, FRIEND_STAT_COLUMNS, null, null, null, null, (FRIEND_STATS_PERCENT + " DESC"), "1");
+		if (cursor.moveToNext()) {
+			// Find everyone with this percent correct and then choose a random one
+			Integer percentCorrect = cursor.getInt(5);
+			String selection = FRIEND_STATS_PERCENT + " = ?";
+			String[] selectionArgs = { percentCorrect.toString() };
+			cursor = db.query(FRIEND_STATS_TABLE_NAME, FRIEND_STAT_COLUMNS, selection, selectionArgs, null, null, null);
+			// If there are more than one, return a random one
+			int index = new Random().nextInt(cursor.getCount());
+			while (cursor.moveToNext()) {
+				// Return the id of the matching user
+				if (cursor.getPosition() == index) id = cursor.getLong(2);
+			}
+		}
+		cursor.close();
+		return id;
+	}
+	
+	public TwitterUser getBFF(Game game) {
+		Long id = getBFFId();
+		// Try to get it from the list of current friends
+		TwitterUser bff = game.getFriendById(id);
+		if (bff == null) {
+			// If they are no longer friends with this person, get them from Twitter
+			try {
+				bff = Twitter.getUserById(id, ctx);
+			} catch (TwitterException e) {
+				e.printStackTrace();
+			} catch (TwitterOAuthException e) {
+				e.printStackTrace();
+			} catch (TwitterCommunicationException e) {
+				e.printStackTrace();
+			}
+		}
+		return bff;
 	}
 	
 	public void updateFriendStat(Long id, Integer currentAttempts, Integer currentCorrect, Boolean isCorrect) {

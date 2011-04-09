@@ -7,8 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.graphics.drawable.Drawable;
-import android.os.Debug;
-import android.util.Log;
 
 public class TwitterUser {
 	private String screenName;
