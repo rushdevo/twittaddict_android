@@ -15,7 +15,7 @@
 	    android:layout_marginRight="20dip"
 	    android:paddingBottom="10dip"
 	    android:gravity="center"
-	    android:background="@color/white"
+	    android:background="@drawable/bubble"
 	    >
 	    <TextView
 	    	android:layout_width="wrap_content"
@@ -65,10 +65,10 @@
 			    android:paddingTop="30px" >
 			    <LinearLayout
 			    	android:layout_width="fill_parent"
-			    	android:layout_height="200dip"
+			    	android:layout_height="150dip"
 			    	android:gravity="center_horizontal"
 			    	android:orientation="vertical"
-			    	android:background="@color/white">
+			    	android:background="@drawable/tab_content_container">
 		     		<TextView  
 					    android:layout_width="wrap_content" 
 					    android:layout_height="wrap_content" 
@@ -92,14 +92,15 @@
 			    android:paddingTop="30px" >
 			    <LinearLayout
 			    	android:layout_width="fill_parent"
-			    	android:layout_height="200dip"
+			    	android:layout_height="150dip"
 			    	android:gravity="center_horizontal"
 			    	android:orientation="vertical"
-			    	android:background="@color/white">
-			    	<TextView  
+			    	android:background="@drawable/tab_content_container">
+			    	<TextView
+			    		android:id="@+id/bff_label"  
 					    android:layout_width="fill_parent" 
 					    android:layout_height="wrap_content" 
-					    android:id="@+id/bff_label"
+					    android:textColor="@color/grey"
 					    android:textSize="20px"
 					    android:paddingBottom="50dip" />
 					<LinearLayout
@@ -115,6 +116,7 @@
 						<TextView  
 						    android:layout_width="fill_parent" 
 						    android:layout_height="wrap_content" 
+						    android:textColor="@color/grey"
 						    android:id="@+id/bff_value" />
 					</LinearLayout>
 				</LinearLayout>

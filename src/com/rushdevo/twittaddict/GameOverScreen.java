@@ -20,11 +20,16 @@ import android.widget.TextView;
 
 import com.rushdevo.twittaddict.data.TwittaddictData;
 
-public class GameOverScreen extends Activity implements OnClickListener {
+public class GameOverScreen extends Activity implements OnClickListener, TabHost.TabContentFactory {
 	
 	LinearLayout highScoreContainer;
 	Button playAgainButton;
 	TwittaddictData db;
+	
+	TextView selectedHighScoreTab;
+	TextView deselectedHighScoreTab;
+	TextView selectedBFFTab;
+	TextView deselectedBFFTab;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +87,7 @@ public class GameOverScreen extends Activity implements OnClickListener {
 		playAgainButton = (Button)findViewById(R.id.play_again_button);
 		playAgainButton.setOnClickListener(this);
 		// Setup high-score and bff tabs
-		TabHost tabHost=(TabHost)findViewById(R.id.tab_host);
+		TabHost tabHost = (TabHost)findViewById(R.id.tab_host);
         tabHost.setup();
 
         String highScoreLabel = getString(R.string.high_score_tab);
@@ -91,25 +96,48 @@ public class GameOverScreen extends Activity implements OnClickListener {
         // TODO: Style the tabs better
         // How to style the disabled tab?
         // Also move this to a method rather than repeating it for both tabs...
-        TextView tabView = new TextView(this);
-        tabView.setHeight(20);
-        tabView.setBackgroundColor(R.color.white);
-        tabView.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        tabView.setText(highScoreLabel);
-        highScoreSpec.setIndicator(tabView);
+        setupTabViews();
+        highScoreSpec.setIndicator(selectedHighScoreTab);
         
         String bffLabel= getString(R.string.bff_tab);
         TabSpec bffSpec = tabHost.newTabSpec(bffLabel);
         bffSpec.setContent(R.id.bff_tab);
-        tabView = new TextView(this);
-        tabView.setHeight(20);
-        tabView.setBackgroundColor(R.color.white);
-        tabView.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        tabView.setText(bffLabel);
-        bffSpec.setIndicator(tabView);
+        bffSpec.setIndicator(deselectedBFFTab);
         
         tabHost.addTab(highScoreSpec);
         tabHost.addTab(bffSpec);
+        tabHost.setCurrentTab(0);
+	}
+	
+	private void setupTabViews() {
+		Drawable selectedBgImage = getResources().getDrawable(R.drawable.selected_tab);
+		// Selected high score tab
+		selectedHighScoreTab = new TextView(this);
+		selectedHighScoreTab.setHeight(20);
+        selectedHighScoreTab.setBackgroundDrawable(selectedBgImage);
+        selectedHighScoreTab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        selectedHighScoreTab.setText(getString(R.string.high_score_tab));
+        
+        // De-selected high score tab
+        deselectedHighScoreTab = new TextView(this);
+		deselectedHighScoreTab.setHeight(20);
+        deselectedHighScoreTab.setBackgroundDrawable(selectedBgImage);
+        deselectedHighScoreTab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        deselectedHighScoreTab.setText(getString(R.string.high_score_tab));
+        
+        // Selected BFF tab
+        selectedBFFTab = new TextView(this);
+        selectedBFFTab.setHeight(20);
+        selectedBFFTab.setBackgroundDrawable(selectedBgImage);
+        selectedBFFTab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        selectedBFFTab.setText(getString(R.string.bff_tab));
+        
+        // De-selected BFF tab
+        deselectedBFFTab = new TextView(this);
+        deselectedBFFTab.setHeight(20);
+        deselectedBFFTab.setBackgroundDrawable(selectedBgImage);
+        deselectedBFFTab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        deselectedBFFTab.setText(getString(R.string.bff_tab));
 	}
 
 	@Override
@@ -118,6 +146,19 @@ public class GameOverScreen extends Activity implements OnClickListener {
 		case R.id.play_again_button:
 			finish();
 			break;
+		}
+	}
+
+	@Override
+	public View createTabContent(String tag) {
+		// TODO: Set the other tab to the deselected one...
+		if (tag == getString(R.string.high_score_tab)) {
+			return selectedHighScoreTab;
+		} else if (tag == getString(R.string.bff_tab)) {
+			return selectedBFFTab;
+		} else {
+			// Shouldn't get here
+			return null;
 		}
 	}
 }

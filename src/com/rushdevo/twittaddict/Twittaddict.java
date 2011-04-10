@@ -38,7 +38,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	private static final int INIT_MESSAGE = 0;
 	private static final int TIMER_MESSAGE = 1;
 	private static final int RESTART_MESSAGE = 2;
-	private static final int GAME_LENGTH = 60;
+	private static final int GAME_LENGTH = 1;
 	private TwittaddictData db;
 	private Integer userId;
 	private Game game;
@@ -186,13 +186,16 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     		// Start the game
         	if (game == null) {
         		game = new Game(this);
-        		game.start();
+        		if (game.getSuccess()) game.start();
         		handler.sendEmptyMessage(INIT_MESSAGE);
         	} else if (game.isComplete()){
-        		handler.sendEmptyMessage(RESTART_MESSAGE);
-        		game.restart();
+        		if (game.getSuccess())  {
+        			handler.sendEmptyMessage(RESTART_MESSAGE);
+        			game.restart();
+        		}
         	}
         	// Start the other thread to generate additional questions
+        	if (!game.getSuccess()) return; // Bail if we don't have a successful game
         	Thread thread = new Thread(this);
 	    	thread.start();
         	// Deal with the timer
@@ -210,17 +213,19 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
             		handler.sendMessage(msg);
     			}
     		}
-    		game.finish();
-    		saveScore();
-    		Intent intent = new Intent(this, GameOverScreen.class);
-    		intent.putExtra("score", game.getScore());
-    		intent.putExtra("user", game.getUser().getScreenName());
-    		TwitterUser bff = db.getBFF(game);
-    		intent.putExtra("bff", bff.getScreenName());
-    		intent.putExtra("bffAvatar", bff.getAvatar());
-    		startActivity(intent);
+    		if (game.getSuccess()) {
+	    		game.finish();
+	    		saveScore();
+	    		Intent intent = new Intent(this, GameOverScreen.class);
+	    		intent.putExtra("score", game.getScore());
+	    		intent.putExtra("user", game.getUser().getScreenName());
+	    		TwitterUser bff = db.getBFF(game);
+	    		intent.putExtra("bff", (bff == null) ? "" : bff.getScreenName());
+	    		intent.putExtra("bffAvatar", (bff == null) ? "" : bff.getAvatar());
+	    		startActivity(intent);
+    		}
     	} else {
-    		while (game.isInPlay()) {
+    		while (game.getSuccess() && game.isInPlay()) {
     			// Keep generating additional questions in the question queue so they are pre-loaded
     			// (Will maintain at most 5 in the queue, and then will do nothing on this call)
     			game.generateNextQuestion();

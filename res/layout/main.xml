@@ -61,37 +61,42 @@
 			android:id="@+id/tweet_container"
 			style="@style/TweetContainer" />
 		<LinearLayout
-			android:id="@+id/three_users_container"
-			android:orientation="horizontal"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center_horizontal">
-			<LinearLayout style="@style/AvatarContainer">
-				<ImageView
-					android:id="@+id/user1"
-					style="@style/AvatarView"
-				/>
-				<TextView
-					android:id="@+id/user1Name"
-				    style="@style/AvatarName" />
-			</LinearLayout>
-			<LinearLayout style="@style/AvatarContainer">
-				<ImageView
-					android:id="@+id/user2"
-					style="@style/AvatarView"
-				/>
-				<TextView
-					android:id="@+id/user2Name"
-				    style="@style/AvatarName" />
-			</LinearLayout>
-			<LinearLayout style="@style/AvatarContainer">
-				<ImageView
-					android:id="@+id/user3"
-					style="@style/AvatarView"
-				/>
-				<TextView
-					android:id="@+id/user3Name"
-				    style="@style/AvatarName" />
+			android:layout_height="fill_parent"
+			android:gravity="bottom|center_horizontal">
+			<LinearLayout
+				android:id="@+id/three_users_container"
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal">
+				<LinearLayout style="@style/AvatarContainer">
+					<ImageView
+						android:id="@+id/user1"
+						style="@style/AvatarView"
+					/>
+					<TextView
+						android:id="@+id/user1Name"
+					    style="@style/AvatarName" />
+				</LinearLayout>
+				<LinearLayout style="@style/AvatarContainer">
+					<ImageView
+						android:id="@+id/user2"
+						style="@style/AvatarView"
+					/>
+					<TextView
+						android:id="@+id/user2Name"
+					    style="@style/AvatarName" />
+				</LinearLayout>
+				<LinearLayout style="@style/AvatarContainer">
+					<ImageView
+						android:id="@+id/user3"
+						style="@style/AvatarView"
+					/>
+					<TextView
+						android:id="@+id/user3Name"
+					    style="@style/AvatarName" />
+				</LinearLayout>
 			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>
@@ -111,19 +116,24 @@
 			android:id="@+id/tweet3_container"
 		    style="@style/TweetContainer" />
 		<LinearLayout
-			android:id="@+id/one_user_container"
-			android:orientation="horizontal"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center_horizontal">
-			<LinearLayout style="@style/AvatarContainer">
-				<ImageView
-					android:id="@+id/user"
-					style="@style/AvatarView"
-				/>
-				<TextView
-					android:id="@+id/userName"
-				    style="@style/AvatarName" />
+			android:layout_height="fill_parent"
+			android:gravity="bottom|center_horizontal">
+			<LinearLayout
+				android:id="@+id/one_user_container"
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center_horizontal">
+				<LinearLayout style="@style/AvatarContainer">
+					<ImageView
+						android:id="@+id/user"
+						style="@style/AvatarView"
+					/>
+					<TextView
+						android:id="@+id/userName"
+					    style="@style/AvatarName" />
+				</LinearLayout>
 			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>

@@ -40,9 +40,9 @@ public class Game {
 		messages = new HashSet<String>();
 		this.success = true;
 		initializeUser(ctx);
-		initializeFriends(ctx);
-		initializeStatuses(ctx);
-		initializeGame();
+		if (success) initializeFriends(ctx);
+		if (success) initializeStatuses(ctx);
+		if (success) initializeGame();
 	}
 	
 	public void start() {
@@ -162,10 +162,6 @@ public class Game {
 	
 	public TwitterUser getFriendById(Long id) {
 		for (TwitterUser friend : this.friends) {
-			debug(" ******");
-			debug(" ****** Friend id: " + friend.getId());
-			debug(" *******       id: " + id);
-			debug(" *******");
 			if (friend.getId().equals(id)) return friend;
 		}
 		return null;
