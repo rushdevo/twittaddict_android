@@ -38,7 +38,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	private static final int INIT_MESSAGE = 0;
 	private static final int TIMER_MESSAGE = 1;
 	private static final int RESTART_MESSAGE = 2;
-	private static final int GAME_LENGTH = 1;
+	private static final int GAME_LENGTH = 60;
 	private TwittaddictData db;
 	private Integer userId;
 	private Game game;
