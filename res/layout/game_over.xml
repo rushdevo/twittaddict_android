@@ -65,7 +65,7 @@
 			    android:paddingTop="30px" >
 			    <LinearLayout
 			    	android:layout_width="fill_parent"
-			    	android:layout_height="150dip"
+			    	android:layout_height="170dip"
 			    	android:gravity="center_horizontal"
 			    	android:orientation="vertical"
 			    	android:background="@drawable/tab_content_container">
@@ -92,7 +92,7 @@
 			    android:paddingTop="30px" >
 			    <LinearLayout
 			    	android:layout_width="fill_parent"
-			    	android:layout_height="150dip"
+			    	android:layout_height="170dip"
 			    	android:gravity="center_horizontal"
 			    	android:orientation="vertical"
 			    	android:background="@drawable/tab_content_container">

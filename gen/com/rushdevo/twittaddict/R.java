@@ -23,11 +23,12 @@ public final class R {
         public static final int bubble=0x7f020002;
         public static final int correct=0x7f020003;
         public static final int default_avatar=0x7f020004;
-        public static final int hourglass=0x7f020005;
-        public static final int icon=0x7f020006;
-        public static final int selected_tab=0x7f020007;
-        public static final int tab_content_container=0x7f020008;
-        public static final int wrong=0x7f020009;
+        public static final int deselected_tab=0x7f020005;
+        public static final int hourglass=0x7f020006;
+        public static final int icon=0x7f020007;
+        public static final int selected_tab=0x7f020008;
+        public static final int tab_content_container=0x7f020009;
+        public static final int wrong=0x7f02000a;
     }
     public static final class id {
         public static final int bff_avatar=0x7f080006;

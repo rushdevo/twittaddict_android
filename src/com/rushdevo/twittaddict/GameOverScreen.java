@@ -16,24 +16,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
 import com.rushdevo.twittaddict.data.TwittaddictData;
 
-public class GameOverScreen extends Activity implements OnClickListener, TabHost.TabContentFactory {
+public class GameOverScreen extends Activity implements OnClickListener {
 	
 	LinearLayout highScoreContainer;
 	Button playAgainButton;
 	TwittaddictData db;
+		
+	Drawable selectedTab;
+	Drawable deselectedTab;
 	
-	TextView selectedHighScoreTab;
-	TextView deselectedHighScoreTab;
-	TextView selectedBFFTab;
-	TextView deselectedBFFTab;
+	TabHost tabHost;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		selectedTab = getResources().getDrawable(R.drawable.selected_tab);
+		deselectedTab = getResources().getDrawable(R.drawable.deselected_tab);
 		setContentView(R.layout.game_over);
 		Bundle bundle = getIntent().getExtras();
 		// Show current score
@@ -87,78 +90,50 @@ public class GameOverScreen extends Activity implements OnClickListener, TabHost
 		playAgainButton = (Button)findViewById(R.id.play_again_button);
 		playAgainButton.setOnClickListener(this);
 		// Setup high-score and bff tabs
-		TabHost tabHost = (TabHost)findViewById(R.id.tab_host);
+		tabHost = (TabHost)findViewById(R.id.tab_host);
         tabHost.setup();
-
+        tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+			@Override
+			public void onTabChanged(String tabId) {
+				for (int i=0;i < tabHost.getTabWidget().getChildCount(); i++)
+			    {
+					tabHost.getTabWidget().getChildAt(i).setBackgroundDrawable(deselectedTab); //unselected
+			    }
+				tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundDrawable(selectedTab); // selected
+			}
+		});
+        
         String highScoreLabel = getString(R.string.high_score_tab);
         TabSpec highScoreSpec = tabHost.newTabSpec(highScoreLabel);
         highScoreSpec.setContent(R.id.high_score_tab);
-        // TODO: Style the tabs better
-        // How to style the disabled tab?
-        // Also move this to a method rather than repeating it for both tabs...
-        setupTabViews();
-        highScoreSpec.setIndicator(selectedHighScoreTab);
+        TextView tab = new TextView(this);
+        tab.setHeight(20);
+        tab.setBackgroundDrawable(selectedTab);
+        tab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        tab.setText(getString(R.string.high_score_tab));
+        highScoreSpec.setIndicator(tab);
         
         String bffLabel= getString(R.string.bff_tab);
         TabSpec bffSpec = tabHost.newTabSpec(bffLabel);
         bffSpec.setContent(R.id.bff_tab);
-        bffSpec.setIndicator(deselectedBFFTab);
+        tab = new TextView(this);
+        tab.setHeight(20);
+        tab.setBackgroundDrawable(deselectedTab);
+        tab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        tab.setText(getString(R.string.high_score_tab));
+        bffSpec.setIndicator(tab);
         
         tabHost.addTab(highScoreSpec);
         tabHost.addTab(bffSpec);
         tabHost.setCurrentTab(0);
 	}
 	
-	private void setupTabViews() {
-		Drawable selectedBgImage = getResources().getDrawable(R.drawable.selected_tab);
-		// Selected high score tab
-		selectedHighScoreTab = new TextView(this);
-		selectedHighScoreTab.setHeight(20);
-        selectedHighScoreTab.setBackgroundDrawable(selectedBgImage);
-        selectedHighScoreTab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        selectedHighScoreTab.setText(getString(R.string.high_score_tab));
-        
-        // De-selected high score tab
-        deselectedHighScoreTab = new TextView(this);
-		deselectedHighScoreTab.setHeight(20);
-        deselectedHighScoreTab.setBackgroundDrawable(selectedBgImage);
-        deselectedHighScoreTab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        deselectedHighScoreTab.setText(getString(R.string.high_score_tab));
-        
-        // Selected BFF tab
-        selectedBFFTab = new TextView(this);
-        selectedBFFTab.setHeight(20);
-        selectedBFFTab.setBackgroundDrawable(selectedBgImage);
-        selectedBFFTab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        selectedBFFTab.setText(getString(R.string.bff_tab));
-        
-        // De-selected BFF tab
-        deselectedBFFTab = new TextView(this);
-        deselectedBFFTab.setHeight(20);
-        deselectedBFFTab.setBackgroundDrawable(selectedBgImage);
-        deselectedBFFTab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        deselectedBFFTab.setText(getString(R.string.bff_tab));
-	}
-
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
 		case R.id.play_again_button:
 			finish();
 			break;
-		}
-	}
-
-	@Override
-	public View createTabContent(String tag) {
-		// TODO: Set the other tab to the deselected one...
-		if (tag == getString(R.string.high_score_tab)) {
-			return selectedHighScoreTab;
-		} else if (tag == getString(R.string.bff_tab)) {
-			return selectedBFFTab;
-		} else {
-			// Shouldn't get here
-			return null;
 		}
 	}
 }
