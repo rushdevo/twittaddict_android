@@ -66,7 +66,7 @@ public class GameOverScreen extends Activity implements OnClickListener {
 			count++;
 			int nextScore = highScores.getInt(3);
 			nextScoreContainer = new TextView(this);
-			nextScoreContainer.setTextSize(TypedValue.COMPLEX_UNIT_PX, 15);
+			nextScoreContainer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
 			if (score == nextScore && !matched) {
 				// Color the first instance of a matched score in blue
 				matched = true;

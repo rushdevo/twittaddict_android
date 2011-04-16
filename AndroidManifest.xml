@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name=".Twittaddict"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:screenOrientation="portrait"
+                  android:configChanges="orientation|keyboardHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -20,9 +22,11 @@
         </activity>
 		
 		<activity android:name=".GameOverScreen"
-                  android:label="@string/game_over">
+                  android:label="@string/game_over"
+                  android:screenOrientation="portrait"
+                  android:configChanges="orientation|keyboardHidden" >
         </activity>
     </application>
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="4"/>
 
 </manifest> 

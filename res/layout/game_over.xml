@@ -23,13 +23,13 @@
 	    	android:layout_margin="10dip"
 	    	android:text="@string/game_over"
 	    	android:textColor="@color/medium_blue"
-	    	android:textSize="25px"
+	    	android:textSize="25dip"
 	    />
 	    <TextView
 	    	android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
 	    	android:text="@string/your_score"
-	    	android:textSize="15px"
+	    	android:textSize="15dip"
 	    	android:textColor="@color/grey"
 	    />
 	    <TextView
@@ -38,7 +38,7 @@
 	    	android:layout_height="wrap_content"
 	    	android:layout_margin="5dip"
 	    	android:textColor="@color/grey"
-	    	android:textSize="30px"
+	    	android:textSize="30dip"
 	    />
 	</LinearLayout>
 	<TabHost
@@ -62,7 +62,7 @@
 			    android:layout_width="fill_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="vertical"
-			    android:paddingTop="30px" >
+			    android:paddingTop="30dip" >
 			    <LinearLayout
 			    	android:layout_width="fill_parent"
 			    	android:layout_height="170dip"
@@ -73,7 +73,7 @@
 					    android:layout_width="wrap_content" 
 					    android:layout_height="wrap_content" 
 					    android:text="@string/high_scores"
-					    android:textSize="20px"
+					    android:textSize="20dip"
 				    	android:textColor="@color/grey" />
 				    <LinearLayout
 				    	android:id="@+id/high_score_container"
@@ -89,7 +89,7 @@
 			    android:layout_height="fill_parent"
 			    android:id="@+id/bff_tab"
 			    android:orientation="vertical"
-			    android:paddingTop="30px" >
+			    android:paddingTop="30dip" >
 			    <LinearLayout
 			    	android:layout_width="fill_parent"
 			    	android:layout_height="170dip"
@@ -101,7 +101,7 @@
 					    android:layout_width="fill_parent" 
 					    android:layout_height="wrap_content" 
 					    android:textColor="@color/grey"
-					    android:textSize="20px"
+					    android:textSize="20dip"
 					    android:paddingBottom="50dip" />
 					<LinearLayout
 						android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
 		 	android:layout_height="wrap_content"
 		 	android:layout_marginLeft="80dip"
 		 	android:layout_marginRight="80dip"
-		 	android:textSize="20px"
+		 	android:textSize="20dip"
 		 	android:textColor="@color/dark_blue"
 		 	android:text="@string/play_again" />
 	</LinearLayout>
