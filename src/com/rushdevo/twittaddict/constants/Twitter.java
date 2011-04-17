@@ -165,7 +165,7 @@ public class Twitter {
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != 200) {
 				debug("Got status " + statusCode + " back from url '" + url + "' for resource '" + resourceName + "'.");
-				throw new TwitterCommunicationException("Failed to get " + resourceName + " from Twitter: " + statusCode);
+				throw new TwitterCommunicationException("Failed to get " + resourceName + " from Twitter: " + statusCode, statusCode == 401);
 			}
 			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			StringBuffer buffer = new StringBuffer();

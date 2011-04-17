@@ -35,10 +35,12 @@ public class Game {
 	private Integer score;
 	private Question currentQuestion;
 	private Queue<Question> nextQuestions;
+	private Boolean deauthorized;
 	
 	public Game(Context ctx) {
 		messages = new HashSet<String>();
 		this.success = true;
+		this.deauthorized = false;
 		initializeUser(ctx);
 		if (success) initializeFriends(ctx);
 		if (success) initializeStatuses(ctx);
@@ -145,6 +147,14 @@ public class Game {
 		return this.messages;
 	}
 	
+	public Boolean wasDeauthorized() {
+		return this.deauthorized;
+	}
+	
+	public void resetDeauthorization() {
+		this.deauthorized = false;
+	}
+	
 	public String getFormattedMessage() {
 		if (this.messages.isEmpty()) return null;
 		String message = "";
@@ -191,6 +201,7 @@ public class Game {
 		} catch (TwitterCommunicationException e) {
 			debug(e);
 			success = false;
+			deauthorized = e.wasDeauthorized();
 			messages.add(e.getMessage());
 		}
 	}
@@ -216,6 +227,7 @@ public class Game {
 		} catch (TwitterCommunicationException e) {
 			debug(e);
 			success = false;
+			deauthorized = e.wasDeauthorized();
 			messages.add(e.getMessage());
 		}
 	}
@@ -242,6 +254,7 @@ public class Game {
 		} catch (TwitterCommunicationException e) {
 			debug(e);
 			success = false;
+			deauthorized = e.wasDeauthorized();
 			messages.add(e.getMessage());
 		}
 	}

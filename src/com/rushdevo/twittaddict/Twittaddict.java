@@ -186,7 +186,12 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     		// Start the game
         	if (game == null) {
         		game = new Game(this);
-        		if (game.getSuccess()) game.start();
+        		if (game.getSuccess()) {
+        			game.start();
+        		} else if (game.wasDeauthorized()) {
+        			game = null;
+        			authorize();
+        		}
         		handler.sendEmptyMessage(INIT_MESSAGE);
         	} else if (game.isComplete()){
         		if (game.getSuccess())  {
@@ -195,7 +200,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
         		}
         	}
         	// Start the other thread to generate additional questions
-        	if (!game.getSuccess()) return; // Bail if we don't have a successful game
+        	if (game == null || !game.getSuccess()) return; // Bail if we don't have a successful game
         	Thread thread = new Thread(this);
 	    	thread.start();
         	// Deal with the timer
@@ -343,25 +348,29 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     	if (authorized(CONSUMER)) {
         	if (game == null || !game.getSuccess()) startGame();
         } else {
-        	// Get authorization
-        	String authUrl;
-			try {
-				authUrl = PROVIDER.retrieveRequestToken(CONSUMER, CALLBACK_URL);
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
-			} catch (OAuthMessageSignerException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthNotAuthorizedException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthExpectationFailedException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			} catch (OAuthCommunicationException e) {
-				errorAlert(getString(R.string.oauth_failure));
-				debug(e);
-			}  
+        	authorize();  
         }
+    }
+    
+    private void authorize() {
+    	// Get authorization
+    	String authUrl;
+		try {
+			authUrl = PROVIDER.retrieveRequestToken(CONSUMER, CALLBACK_URL);
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+		} catch (OAuthMessageSignerException e) {
+			errorAlert(getString(R.string.oauth_failure));
+			debug(e);
+		} catch (OAuthNotAuthorizedException e) {
+			errorAlert(getString(R.string.oauth_failure));
+			debug(e);
+		} catch (OAuthExpectationFailedException e) {
+			errorAlert(getString(R.string.oauth_failure));
+			debug(e);
+		} catch (OAuthCommunicationException e) {
+			errorAlert(getString(R.string.oauth_failure));
+			debug(e);
+		}
     }
     
     private boolean authorized(AbstractOAuthConsumer consumer) {
@@ -394,7 +403,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     }
     
     private void saveTokenAndSecret(AbstractOAuthConsumer consumer) {
-    	int id = db.addUser(consumer.getToken(), consumer.getTokenSecret());
+    	int id = db.addOrUpdateUser(consumer.getToken(), consumer.getTokenSecret());
     	if (id != -1) {
     		this.userId = id;
     	}
@@ -407,7 +416,10 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     		case INIT_MESSAGE:
     			progressDialog.dismiss();
         		initializing = false;
-        		if (!game.getSuccess()) {
+        		if (game == null) {
+        			// Deauth problem, game got destroyed
+        			break;
+        		} else if (!game.getSuccess()) {
         			// Something went wrong during game initialization
         			errorAlert(game.getFormattedMessage());
         		} else {

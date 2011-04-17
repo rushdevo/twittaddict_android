@@ -97,11 +97,27 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		return cursor;
 	}
 	
+	public Integer getLoggedInUserId() {
+		// For now, it is assumed that the user table is a singleton table
+		Cursor cursor = getUsers();
+		if (cursor.moveToNext()) {
+			return cursor.getInt(0);
+		}
+		return null;
+	}
+	
+	public Integer addOrUpdateUser(String token, String tokenSecret) {
+		Integer id = getLoggedInUserId();
+		if (id == null) {
+			return addUser(token, tokenSecret);
+		} else {
+			updateUser(id, token, tokenSecret);
+			return id;
+		}
+	}
+	
 	public Integer addUser(String token, String tokenSecret) {
 		SQLiteDatabase db = getWritableDatabase();
-		// Get rid of any previously existing user records - there can only be one
-		truncateUsersTable(db);
-		// Then add the new one
 		ContentValues values = new ContentValues();
 		values.put(USERS_TOKEN, token);
 		values.put(USERS_TOKEN_SECRET, tokenSecret);
@@ -112,6 +128,16 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		}
 	}
 	
+	public void updateUser(Integer id, String token, String tokenSecret) {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(USERS_TOKEN, token);
+		values.put(USERS_TOKEN_SECRET, tokenSecret);
+		String whereClause = _ID + " = ?";
+		String[] whereArgs = { id.toString() };
+		db.update(USERS_TABLE_NAME, values, whereClause, whereArgs);
+	}
+		
 	public Cursor getFriendStat(TwitterUser user) {
 		SQLiteDatabase db = getReadableDatabase();
 		String selection = FRIEND_STATS_FRIEND + " = ?";
