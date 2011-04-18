@@ -133,8 +133,9 @@
 		 	android:layout_height="wrap_content"
 		 	android:layout_marginLeft="80dip"
 		 	android:layout_marginRight="80dip"
-		 	android:textSize="20dip"
+		 	android:textSize="18dip"
 		 	android:textColor="@color/dark_blue"
+		 	android:background="@drawable/button_bg"
 		 	android:text="@string/play_again" />
 	</LinearLayout>
 </LinearLayout>

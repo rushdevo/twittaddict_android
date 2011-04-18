@@ -58,10 +58,13 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	// Tweet Question views
 	private View tweetLayout;
 	private TextView tweetView;
+	private View user1Container;
 	private ImageView user1View;
 	private TextView user1Name;
+	private View user2Container;
 	private ImageView user2View;
 	private TextView user2Name;
+	private View user3Container;
 	private ImageView user3View;
 	private TextView user3Name;
 	// Score area views
@@ -87,13 +90,16 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
         tweet3View.setOnClickListener(this);
         tweetView = (TextView)findViewById(R.id.tweet_container);
     	user1View = (ImageView)findViewById(R.id.user1);
-    	user1View.setOnClickListener(this);
+    	user1Container = findViewById(R.id.user1Container);
+    	user1Container.setOnClickListener(this);
     	user1Name = (TextView)findViewById(R.id.user1Name);
     	user2View = (ImageView)findViewById(R.id.user2);
-    	user2View.setOnClickListener(this);
+    	user2Container = findViewById(R.id.user2Container);
+    	user2Container.setOnClickListener(this);
     	user2Name = (TextView)findViewById(R.id.user2Name);
     	user3View = (ImageView)findViewById(R.id.user3);
-    	user3View.setOnClickListener(this);
+    	user3Container = findViewById(R.id.user3Container);
+    	user3Container.setOnClickListener(this);
     	user3Name = (TextView)findViewById(R.id.user3Name);
     	scoreContainer = (TextView)findViewById(R.id.score_container);
     	correctMarker = (ImageView)findViewById(R.id.correct_marker);
@@ -149,13 +155,13 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 		case R.id.tweet3_container:
 			setAnswer(3, v);
 			break;
-		case R.id.user1:
+		case R.id.user1Container:
 			setAnswer(1, v);
 			break;
-		case R.id.user2:
+		case R.id.user2Container:
 			setAnswer(2, v);
 			break;
-		case R.id.user3:
+		case R.id.user3Container:
 			setAnswer(3, v);
 			break;
 		}

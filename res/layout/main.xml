@@ -70,7 +70,9 @@
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:gravity="center_horizontal">
-				<LinearLayout style="@style/AvatarContainer">
+				<LinearLayout
+					android:id="@+id/user1Container"
+					style="@style/AvatarContainer">
 					<ImageView
 						android:id="@+id/user1"
 						style="@style/AvatarView"
@@ -79,7 +81,9 @@
 						android:id="@+id/user1Name"
 					    style="@style/AvatarName" />
 				</LinearLayout>
-				<LinearLayout style="@style/AvatarContainer">
+				<LinearLayout
+					android:id="@+id/user2Container"
+					style="@style/AvatarContainer">
 					<ImageView
 						android:id="@+id/user2"
 						style="@style/AvatarView"
@@ -88,7 +92,9 @@
 						android:id="@+id/user2Name"
 					    style="@style/AvatarName" />
 				</LinearLayout>
-				<LinearLayout style="@style/AvatarContainer">
+				<LinearLayout
+					android:id="@+id/user3Container"
+					style="@style/AvatarContainer">
 					<ImageView
 						android:id="@+id/user3"
 						style="@style/AvatarView"
