@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,8 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.rushdevo.twittaddict.data.TwittaddictData;
@@ -132,6 +133,8 @@ public class GameOverScreen extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch(v.getId()) {
 		case R.id.play_again_button:
+			Intent intent = new Intent(this, Twittaddict.class);
+    		startActivity(intent);
 			finish();
 			break;
 		}

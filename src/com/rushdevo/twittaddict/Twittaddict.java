@@ -234,6 +234,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	    		intent.putExtra("bff", (bff == null) ? "" : bff.getScreenName());
 	    		intent.putExtra("bffAvatar", (bff == null) ? "" : bff.getAvatar());
 	    		startActivity(intent);
+	    		finish();
     		}
     	} else {
     		while (game.getSuccess() && game.isInPlay()) {
