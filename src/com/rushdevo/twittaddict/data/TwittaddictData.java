@@ -158,20 +158,23 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		Long id = null;
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor cursor = db.query(FRIEND_STATS_TABLE_NAME, FRIEND_STAT_COLUMNS, null, null, null, null, (FRIEND_STATS_PERCENT + " DESC"), "1");
+		Cursor othersCursor;
 		if (cursor.moveToNext()) {
 			// Find everyone with this percent correct and then choose a random one
 			Integer percentCorrect = cursor.getInt(5);
 			String selection = FRIEND_STATS_PERCENT + " = ?";
 			String[] selectionArgs = { percentCorrect.toString() };
-			cursor = db.query(FRIEND_STATS_TABLE_NAME, FRIEND_STAT_COLUMNS, selection, selectionArgs, null, null, null);
+			othersCursor = db.query(FRIEND_STATS_TABLE_NAME, FRIEND_STAT_COLUMNS, selection, selectionArgs, null, null, null);
 			// If there are more than one, return a random one
 			int index = new Random().nextInt(cursor.getCount());
-			while (cursor.moveToNext()) {
+			while (othersCursor.moveToNext()) {
 				// Return the id of the matching user
-				if (cursor.getPosition() == index) id = cursor.getLong(2);
+				if (othersCursor.getPosition() == index) id = othersCursor.getLong(2);
 			}
+			othersCursor.close();
 		}
 		cursor.close();
+		db.close();
 		return id;
 	}
 	
@@ -246,6 +249,7 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		} catch (SQLException e) {
 			// NOOP
 		}
+		db.close();
 	}
 	
 	public Cursor getHighScores() {
