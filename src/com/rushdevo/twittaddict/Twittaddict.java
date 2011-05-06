@@ -74,8 +74,8 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
         db = new TwittaddictData(this);
+        setContentView(R.layout.main);
         // Init view elements
         timerLabel = (TextView)findViewById(R.id.timer);
         tweetLayout = (LinearLayout)findViewById(R.id.tweet_question_container);
@@ -103,6 +103,12 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     	user3Name = (TextView)findViewById(R.id.user3Name);
     	scoreContainer = (TextView)findViewById(R.id.score_container);
     	correctMarker = (ImageView)findViewById(R.id.correct_marker);
+    }
+    
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	if (db != null) db.close();
     }
     
     @Override

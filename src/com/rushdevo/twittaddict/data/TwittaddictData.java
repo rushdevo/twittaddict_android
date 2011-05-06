@@ -100,6 +100,7 @@ public class TwittaddictData extends SQLiteOpenHelper {
 	public Integer getLoggedInUserId() {
 		// For now, it is assumed that the user table is a singleton table
 		Cursor cursor = getUsers();
+		ctx.startManagingCursor(cursor);
 		if (cursor.moveToNext()) {
 			return cursor.getInt(0);
 		}
@@ -174,7 +175,6 @@ public class TwittaddictData extends SQLiteOpenHelper {
 			othersCursor.close();
 		}
 		cursor.close();
-		db.close();
 		return id;
 	}
 	
@@ -249,7 +249,6 @@ public class TwittaddictData extends SQLiteOpenHelper {
 		} catch (SQLException e) {
 			// NOOP
 		}
-		db.close();
 	}
 	
 	public Cursor getHighScores() {

@@ -36,6 +36,7 @@ public class GameOverScreen extends Activity implements OnClickListener {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		db = new TwittaddictData(this);
 		selectedTab = getResources().getDrawable(R.drawable.selected_tab);
 		deselectedTab = getResources().getDrawable(R.drawable.deselected_tab);
 		setContentView(R.layout.game_over);
@@ -58,7 +59,6 @@ public class GameOverScreen extends Activity implements OnClickListener {
 		scoreView.setText(Integer.toString(score));
 		// Add the high scores list
 		highScoreContainer = (LinearLayout)findViewById(R.id.high_score_container);
-		db = new TwittaddictData(this);
 		Cursor highScores = db.getHighScores();
 		int count = 0;
 		boolean matched = false;
@@ -127,6 +127,12 @@ public class GameOverScreen extends Activity implements OnClickListener {
         tabHost.addTab(highScoreSpec);
         tabHost.addTab(bffSpec);
         tabHost.setCurrentTab(0);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (db != null) db.close();
 	}
 	
 	@Override
