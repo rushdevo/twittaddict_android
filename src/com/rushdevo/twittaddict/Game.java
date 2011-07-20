@@ -13,10 +13,10 @@ import java.util.Set;
 import android.content.Context;
 import android.util.Log;
 
-import com.rushdevo.twittaddict.constants.Twitter;
 import com.rushdevo.twittaddict.exceptions.TwitterCommunicationException;
 import com.rushdevo.twittaddict.exceptions.TwitterException;
 import com.rushdevo.twittaddict.exceptions.TwitterOAuthException;
+import com.rushdevo.twittaddict.twitter.Twitter;
 import com.rushdevo.twittaddict.twitter.TwitterStatus;
 import com.rushdevo.twittaddict.twitter.TwitterUser;
 

@@ -1,7 +1,7 @@
 package com.rushdevo.twittaddict;
 
-import static com.rushdevo.twittaddict.constants.Twitter.CONSUMER;
-import static com.rushdevo.twittaddict.constants.Twitter.PROVIDER;
+import static com.rushdevo.twittaddict.twitter.Twitter.CONSUMER;
+import static com.rushdevo.twittaddict.twitter.Twitter.PROVIDER;
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.OAuth;
 import oauth.signpost.exception.OAuthCommunicationException;

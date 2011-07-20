@@ -1,10 +1,13 @@
-package com.rushdevo.twittaddict.constants;
+package com.rushdevo.twittaddict.twitter;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Properties;
 
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -29,13 +32,19 @@ import com.rushdevo.twittaddict.R;
 import com.rushdevo.twittaddict.exceptions.TwitterCommunicationException;
 import com.rushdevo.twittaddict.exceptions.TwitterException;
 import com.rushdevo.twittaddict.exceptions.TwitterOAuthException;
-import com.rushdevo.twittaddict.twitter.TwitterStatus;
-import com.rushdevo.twittaddict.twitter.TwitterUser;
 
 public class Twitter {
+	public static final Properties TWITTER_PROPERTIES = new Properties();
+	static {
+		try {
+			TWITTER_PROPERTIES.load(new FileInputStream("twitter.properties"));
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
+	}
 	public static final CommonsHttpOAuthConsumer CONSUMER = new CommonsHttpOAuthConsumer(
-			"cUAeEHVxEhcEMc0h0pHL9g", 
-			"JWEPcI88t6Om2XJ25KknVhQFKMsa5j4Pcy9axFN57VI");  
+			TWITTER_PROPERTIES.getProperty("consumerKey"), 
+			TWITTER_PROPERTIES.getProperty("consumerSecret"));  
 	
 	public static final OAuthProvider PROVIDER = new CommonsHttpOAuthProvider(
 		    "http://twitter.com/oauth/request_token",
