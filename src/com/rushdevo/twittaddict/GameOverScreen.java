@@ -121,7 +121,7 @@ public class GameOverScreen extends Activity implements OnClickListener {
         tab.setHeight(20);
         tab.setBackgroundDrawable(deselectedTab);
         tab.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        tab.setText(getString(R.string.high_score_tab));
+        tab.setText(getString(R.string.bff_tab));
         bffSpec.setIndicator(tab);
         
         tabHost.addTab(highScoreSpec);

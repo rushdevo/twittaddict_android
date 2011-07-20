@@ -26,6 +26,6 @@
     <string name="high_scores">High Scores:</string>
     <string name="play_again">Play Again</string>
     <string name="high_score_tab">High Score</string>
-    <string name="bff_tab">Twitter BFFs</string>
+    <string name="bff_tab">Twitter BFF</string>
     <string name="bff_label">\'s BFF is...</string>
 </resources>

@@ -274,8 +274,8 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     			displayTweetQuestion((TweetQuestion)question);
     		} else if (question instanceof UserQuestion) {
     			displayUserQuestion((UserQuestion)question);
-    		} // Else - TODO: what do we do...
-    	} // Else - TODO: what do we do...
+    		}
+    	}
     }
     
     private void setAnswer(int index, View v) {
