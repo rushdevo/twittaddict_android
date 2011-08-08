@@ -1,7 +1,5 @@
 package com.rushdevo.twittaddict;
 
-import static com.rushdevo.twittaddict.twitter.Twitter.CONSUMER;
-import static com.rushdevo.twittaddict.twitter.Twitter.PROVIDER;
 import oauth.signpost.AbstractOAuthConsumer;
 import oauth.signpost.OAuth;
 import oauth.signpost.exception.OAuthCommunicationException;
@@ -30,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rushdevo.twittaddict.data.TwittaddictData;
+import com.rushdevo.twittaddict.twitter.Twitter;
 import com.rushdevo.twittaddict.twitter.TwitterUser;
 
 public class Twittaddict extends Activity implements Runnable, OnClickListener {
@@ -128,8 +127,8 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
 	    	    String verifier = uri.getQueryParameter(OAuth.OAUTH_VERIFIER);  
 	    	    // this will populate token and token_secret in consumer
 	    	    try {
-					PROVIDER.retrieveAccessToken(CONSUMER, verifier);
-					saveTokenAndSecret(CONSUMER);
+					Twitter.getProviderInstance().retrieveAccessToken(Twitter.getConsumerInstance(this), verifier);
+					saveTokenAndSecret(Twitter.getConsumerInstance(this));
 					startGame();
 				} catch (OAuthMessageSignerException e) {
 					errorAlert(getString(R.string.oauth_failure));
@@ -358,7 +357,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     }
     
     private void authorizeOrStartGame() {
-    	if (authorized(CONSUMER)) {
+    	if (authorized(Twitter.getConsumerInstance(this))) {
         	if (game == null || !game.getSuccess()) startGame();
         } else {
         	authorize();  
@@ -369,7 +368,7 @@ public class Twittaddict extends Activity implements Runnable, OnClickListener {
     	// Get authorization
     	String authUrl;
 		try {
-			authUrl = PROVIDER.retrieveRequestToken(CONSUMER, CALLBACK_URL);
+			authUrl = Twitter.getProviderInstance().retrieveRequestToken(Twitter.getConsumerInstance(this), CALLBACK_URL);
 			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
 		} catch (OAuthMessageSignerException e) {
 			errorAlert(getString(R.string.oauth_failure));

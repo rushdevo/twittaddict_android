@@ -1,8 +1,6 @@
 package com.rushdevo.twittaddict.twitter;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -34,23 +32,6 @@ import com.rushdevo.twittaddict.exceptions.TwitterException;
 import com.rushdevo.twittaddict.exceptions.TwitterOAuthException;
 
 public class Twitter {
-	public static final Properties TWITTER_PROPERTIES = new Properties();
-	static {
-		try {
-			TWITTER_PROPERTIES.load(new FileInputStream("twitter.properties"));
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}
-	}
-	public static final CommonsHttpOAuthConsumer CONSUMER = new CommonsHttpOAuthConsumer(
-			TWITTER_PROPERTIES.getProperty("consumerKey"), 
-			TWITTER_PROPERTIES.getProperty("consumerSecret"));  
-	
-	public static final OAuthProvider PROVIDER = new CommonsHttpOAuthProvider(
-		    "http://twitter.com/oauth/request_token",
-		    "http://twitter.com/oauth/access_token",
-		    "http://twitter.com/oauth/authorize");
-
 	public static final HttpClient CLIENT = new DefaultHttpClient();
 	
 	// URLS
@@ -60,6 +41,32 @@ public class Twitter {
 	private static final String USER_LOOKUP_URL = BASE_URL + "users/lookup.json";
 	private static final String FRIENDS_TIMELINE_URL = BASE_URL + "statuses/friends_timeline.json?count=200";
 	
+	// OAuth-related singletons and constants
+	private static CommonsHttpOAuthConsumer consumerInstance;
+	public static CommonsHttpOAuthConsumer getConsumerInstance(Context ctx) {
+		if (consumerInstance == null) {
+			Properties props = new Properties();
+			try {
+				props.load(ctx.getResources().getAssets().open("twitter.properties"));
+				consumerInstance = new CommonsHttpOAuthConsumer(
+					props.getProperty("consumerKey"), 
+					props.getProperty("consumerSecret"));  
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return consumerInstance;
+	}
+	
+	private static final OAuthProvider providerInstance = new CommonsHttpOAuthProvider(
+		    "http://twitter.com/oauth/request_token",
+		    "http://twitter.com/oauth/access_token",
+		    "http://twitter.com/oauth/authorize");
+	public static OAuthProvider getProviderInstance() {
+		return providerInstance;
+	}
+	
+	// Data accessors
 	public static ArrayList<Long> getFriendIds(Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		try {
 			JSONArray array = getJSONArray(FRIEND_URL, "friend list", ctx);
@@ -169,7 +176,7 @@ public class Twitter {
 	private static String getJSONString(String url, String resourceName, Context ctx) throws TwitterException, TwitterOAuthException, TwitterCommunicationException {
 		try {
 			HttpGet get = new HttpGet(url);
-			CONSUMER.sign(get);
+			getConsumerInstance(ctx).sign(get);
 			final HttpResponse response = CLIENT.execute(get);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != 200) {
